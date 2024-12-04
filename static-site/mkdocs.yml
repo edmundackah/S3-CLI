@@ -1,0 +1,83 @@
+site_name: S3 Deployment CLI
+site_url: https://mydomain.org/docs/s3-cli
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/lightbulb-auto
+        name: Switch to light mode
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      primary: black
+      accent: teal
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      primary: black
+      accent: teal
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to system preference
+  features:
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tracking
+    - navigation.tabs.sticky
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.share
+    - content.code.copy
+    - toc.follow
+plugins:
+  - search
+  - blog
+
+extra:
+  generator: false
+
+extra_javascript:
+  - js/custom.js
+  - js/termynal.js
+extra_css:
+  - css/custom.css
+  - css/termynal.css
+
+nav:
+  - Home: index.md
+  - Docs:
+      - Commands:
+          - S3 Management:
+            - command/remove-objects.md
+            - command/deploy-snapshot.md
+            - command/deploy-release.md
+            - command/verify-maintenance.md
+            - command/deploy-maintenance.md
+      - Configuration Management:
+          - config-management/index.md
+          - config-management/switching-profiles.md
+          - config-management/creating-a-profile.md
+          - config-management/updating-a-profile.md
+  - Release Notes: release-notes.md
+  - Blog:
+    - blog/index.md

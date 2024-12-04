@@ -1,0 +1,18 @@
+                                                                                                                                                                                                
+ Usage: s3-cli.py [OPTIONS] COMMAND [ARGS]...                                                                                                                                                   
+                                                                                                                                                                                                
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --install-completion          Install completion for the current shell.                                                                                                                      │
+│ --show-completion             Show completion for the current shell, to copy it or customize the installation.                                                                               │
+│ --help                        Show this message and exit.                                                                                                                                    │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ deploy-snapshot      Deploy a snapshot to the specified target server.                                                                                                                       │
+│ deploy-release       Deploy a release to the specified target server.                                                                                                                        │
+│ remove-objects       Remove objects from a bucket with the given object key prefix.                                                                                                          │
+│ verify-maintenance   Verify the contents of the maintenance.json file in the specified bucket.                                                                                               │
+│ deploy-maintenance   Deploy or update maintenance flags in the specified bucket.                                                                                                             │
+│ list-objects         List and display objects in an S3 bucket as a table.                                                                                                                    │
+│ version                                                                                                                                                                                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
