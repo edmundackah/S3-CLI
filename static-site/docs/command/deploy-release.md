@@ -2,10 +2,11 @@
 
 ## Description
 
-The `deploy-release` command downloads a `.tgz` file from a specified URL (Artifactory), validates a change record with ServiceNow and uploads the contents of the `package/build` directory to an S3 bucket.
+The `deploy-release` command downloads a `.tgz` file from a specified URL (Artifactory), 
+validates a change record with ServiceNow and uploads the contents of the `package/build` directory to an S3 bucket.
 
 !!! warning "Mandatory Change Record"
-    A valid change record is required to run this command.
+    A valid change record is required to run this command against a production bucket.
 
 ## Usage
 
@@ -33,16 +34,31 @@ s3-cli deploy-release --url <URL> --bucket-name <BucketName> --prefix <Prefix> -
 <div class="termy">
 
 ```console
-$ s3-cli deploy-snapshot --bucket-name cli-demo --folder-path /Users/edmund/Documents/GitHub/SPA-Poc-CLI/src/test/resources/snapshot-test --prefix doc-test
+$ s3-cli deploy-release --url "http://127.0.0.1:5000/download/tgz" --bucket-name prod --prefix release-test --change-record INC000000
 
-2024-12-03 08:35:50,160 [INFO] Connecting to S3 Server: ECS_S3
-2024-12-03 08:35:50,208 [INFO] Listing objects with prefix 'doc-test' in bucket 'cli-demo'...
-2024-12-03 08:35:50,214 [WARNING] No objects found with prefix 'doc-test' in bucket 'cli-demo'.
-2024-12-03 08:35:50,214 [INFO] Connecting to S3 Server: ECS_S3
-2024-12-03 08:35:50,225 [INFO] Uploading /Users/edmund/Documents/GitHub/SPA-Poc-CLI/src/test/resources/snapshot-test/outer.txt to S3://cli-demo/doc-test/outer.txt with Content-Type: text/plain
-2024-12-03 08:35:50,230 [INFO] Uploaded /Users/edmund/Documents/GitHub/SPA-Poc-CLI/src/test/resources/snapshot-test/outer.txt successfully.
-2024-12-03 08:35:50,236 [INFO] Uploading /Users/edmund/Documents/GitHub/SPA-Poc-CLI/src/test/resources/snapshot-test/snapshot/inner.txt to S3://cli-demo/doc-test/snapshot/inner.txt with Content-Type: text/plain
-2024-12-03 08:35:50,241 [INFO] Uploaded /Users/edmund/Documents/GitHub/SPA-Poc-CLI/src/test/resources/snapshot-test/snapshot/inner.txt successfully.
-2024-12-03 08:35:50,241 [INFO] All files uploaded successfully.
+2024-12-05 20:52:37,110 [INFO] CLI running with profile: default
+Validating change record: INC000000
+2024-12-05 20:52:37,142 [INFO] Downloading release package from http://127.0.0.1:5000/download/tgz...
+2024-12-05 20:52:37,143 [INFO] Downloaded tgz successfully.
+2024-12-05 20:52:37,143 [INFO] Extracting tgz...
+2024-12-05 20:52:37,146 [INFO] Extracted contents to release_extract.
+2024-12-05 20:52:37,146 [INFO] Connecting to S3 Server: ECS_S3
+2024-12-05 20:52:37,146 [INFO] Accessing ECS_S3 endpoint: http://localhost:9000
+2024-12-05 20:52:37,187 [INFO] Listing objects with prefix 'release-test' in bucket 'prod'...
+2024-12-05 20:52:37,193 [WARNING] No objects found with prefix 'release-test' in bucket 'prod'.
+2024-12-05 20:52:37,193 [INFO] Uploading contents of release_extract/package/build to bucket prod with prefix release-test...
+2024-12-05 20:52:37,193 [INFO] Connecting to S3 Server: ECS_S3
+2024-12-05 20:52:37,193 [INFO] Accessing ECS_S3 endpoint: http://localhost:9000
+2024-12-05 20:52:37,196 [INFO] Uploading release_extract/package/build/credentials 2.json to S3://prod/release-test/credentials 2.json with Content-Type: application/json
+2024-12-05 20:52:37,202 [INFO] Uploaded release_extract/package/build/credentials 2.json successfully.
+2024-12-05 20:52:37,202 [INFO] Uploaded release_extract/package/build to S3://prod/release-test/credentials 2.json.
+2024-12-05 20:52:37,203 [INFO] Uploading release_extract/package/build/maintenance.json to S3://prod/release-test/maintenance.json with Content-Type: application/json
+2024-12-05 20:52:37,207 [INFO] Uploaded release_extract/package/build/maintenance.json successfully.
+2024-12-05 20:52:37,207 [INFO] Uploaded release_extract/package/build to S3://prod/release-test/maintenance.json.
+2024-12-05 20:52:37,215 [INFO] Release package deployed successfully.
+2024-12-05 20:52:37,215 [INFO] Cleaning up temporary files...
+2024-12-05 20:52:37,215 [INFO] Removed tgz.
+2024-12-05 20:52:37,216 [INFO] Removed release_extract.
+2024-12-05 20:52:37,216 [INFO] Deployment completed successfully.
 ```
 </div>
