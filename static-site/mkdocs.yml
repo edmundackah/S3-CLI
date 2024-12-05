@@ -53,9 +53,6 @@ plugins:
   - search
   - blog
 
-extra:
-  generator: false
-
 extra_javascript:
   - js/custom.js
   - js/termynal.js
@@ -73,11 +70,11 @@ nav:
             - command/deploy-release.md
             - command/verify-maintenance.md
             - command/deploy-maintenance.md
+          - command/change-record-details.md
       - Configuration Management:
           - config-management/index.md
           - config-management/switching-profiles.md
           - config-management/creating-a-profile.md
           - config-management/updating-a-profile.md
+  - Compiling a binary: compiling-into-a-native-binary.md
   - Release Notes: release-notes.md
-  - Blog:
-    - blog/index.md

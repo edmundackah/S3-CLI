@@ -1,12 +1,15 @@
 import re
-
+import sys
 import typer
 from enum import Enum
 from typing import Optional
+from rich.table import Table
+from rich.console import Console
+from utils.config_manager import ConfigManager
 from snow.snow_broker_client import fetch_record
 from models.snow_broker_models import ChangeRecordResponse, NotFoundResponse
-from utils.config_manager import ConfigManager
 
+console = Console()
 config = ConfigManager.get_config()
 
 class TargetServer(str, Enum):
@@ -16,6 +19,7 @@ class TargetServer(str, Enum):
 
 def list_to_array(value: str):
     return value.split(",")
+
 
 def validate_boolean(value: str):
     if value.lower() not in ["true", "false"]:
@@ -62,3 +66,24 @@ def validate_change_record(change_record: Optional[str], ctx: typer.Context):
         print(f"Unexpected Exception: {e}")
         raise typer.BadParameter("Fatal Error: Unable to connect to ServiceNow")
 
+
+def render_table(data: dict, table_title: str):
+    """Render API response as an ASCII table."""
+    try:
+        if not data:
+            console.print("[bold yellow]No data available to render.[/bold yellow]")
+            return
+
+        table = Table(title=table_title, show_header=True, header_style="bold blue")
+
+        # Add columns dynamically based on keys in the data
+        for key in data.keys():
+            table.add_column(key)
+
+        # Add data row
+        table.add_row(*[str(value) if value is not None else "N/A" for value in data.values()])
+
+        console.print(table)
+        sys.exit(0)
+    except Exception as e:
+        console.print(f"[bold red]Error rendering table:[/bold red] {e}")

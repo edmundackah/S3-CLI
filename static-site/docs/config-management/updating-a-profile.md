@@ -19,7 +19,7 @@ from utils.config_manager import ConfigManager
 
 config = ConfigManager.get_config()
 
-cache_timeout = config.default.cache_timeout
+cache_timeout = config.cache_timeout
 ```
 
 !!! tip

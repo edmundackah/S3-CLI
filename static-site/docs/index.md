@@ -40,7 +40,7 @@ Follow these steps to set up S3 CLI:
 
 2. Navigate to the CLI directory:
    ```bash
-   cd spa-cli
+   cd s3-cli
    ```
 
 3. Install the required dependencies:
@@ -64,5 +64,5 @@ Follow these steps to set up S3 CLI:
 - For detailed command documentation, visit the [Commands](command/deploy-snapshot.md) section.
 - Use the `--help` flag with any command to view detailed usage information:
   ```bash
-  python cli.py <command> --help
+  python s3-cli.py <command> --help
   ```

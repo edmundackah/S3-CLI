@@ -1,3 +1,5 @@
+from urllib.parse import urljoin
+
 import requests
 from utils.config_manager import ConfigManager
 from models.snow_broker_models import ChangeRecordResponse, NotFoundResponse, ChangeRecordException
@@ -27,7 +29,9 @@ def fetch_record(change_record):
     else:
         raise ValueError("Invalid record number. Must start with 'MCR' or 'INC'.")
 
-    url = f"{config.snow_broker.hostname}{endpoint}"
+    url = urljoin(config.snow_broker.hostname,endpoint)
+
+    print(f"endpoint: {endpoint}  hostname: {config.snow_broker.hostname}  calling: {url}")
 
     try:
         response = requests.get(url, headers={"Accept": "application/json"})

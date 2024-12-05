@@ -2,12 +2,13 @@ from typing import Optional
 
 import typer
 
+from utils.config_manager import ConfigManager
+from commands.list_objects import list_objects
+from commands.remove_objects import remove_objects
 from commands.deploy_release import deploy_release
 from commands.deploy_snapshot import deploy_snapshot
-from commands.list_objects import list_objects
+from commands.change_record_overview import find_change_record
 from commands.maintenance import verify_maintenance, deploy_maintenance
-from commands.remove_objects import remove_objects
-from utils.config_manager import ConfigManager
 from utils.helpers import validate_prefix, validate_bucket_name, validate_change_record, TargetServer, validate_boolean
 
 app = typer.Typer()
@@ -22,9 +23,7 @@ def deploy_snapshot_command(
     prefix: str = typer.Option(..., "--prefix", help="Object key prefix", callback=validate_prefix),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment")
 ):
-    """
-    Deploy a snapshot to the specified target server.
-    """
+    """Deploy a snapshot to the specified target server."""
     deploy_snapshot(folder_path, bucket_name, prefix, target_server)
 
 
@@ -38,9 +37,7 @@ def deploy_release_command(
                                                 help="Change record required to authorise prod change",
                                                 callback=validate_change_record)
 ):
-    """
-    Deploy a release to the specified target server.
-    """
+    """Deploy a release to the specified target server."""
     deploy_release(url, bucket_name, prefix, target_server)
 
 
@@ -53,9 +50,7 @@ def remove_objects_command(
                                                 help="Change record required to authorise prod change",
                                                 callback=validate_change_record)
 ):
-    """
-    Remove objects from a bucket with the given object key prefix.
-    """
+    """Remove objects from a bucket with the given object key prefix."""
     remove_objects(bucket_name, prefix, target_server)
 
 
@@ -67,9 +62,7 @@ def verify_maintenance_command(
                                                 help="Change record required to authorise prod change",
                                                 callback=validate_change_record)
 ):
-    """
-    Verify the contents of the maintenance.json file in the specified bucket.
-    """
+    """Verify the contents of the maintenance.json file in the specified bucket."""
     verify_maintenance(bucket_name, target_server)
 
 
@@ -83,9 +76,7 @@ def deploy_maintenance_command(
                                                 help="Change record required to authorise prod change",
                                                 callback=validate_change_record)
 ):
-    """
-    Deploy or update maintenance flags in the specified bucket.
-    """
+    """Deploy or update maintenance flags in the specified bucket."""
     deploy_maintenance(bucket_name, flags, state, target_server)
 
 
@@ -98,10 +89,14 @@ def list_objects_command(
                                                 help="Change record required to authorise prod change",
                                                 callback=validate_change_record)
 ):
-    """
-    List and display objects in an S3 bucket as a table.
-    """
+    """List and display objects in an S3 bucket as a table."""
     list_objects(bucket_name, prefix, target_server)
+
+
+@app.command("view-change-record")
+def view_change_record(mcr_number: str = typer.Option(..., "--number", help="e.g. MCR00000 / INC00000")):
+    """Pulls change record or incident details from ServieNow"""
+    find_change_record(mcr_number)
 
 
 @app.command()

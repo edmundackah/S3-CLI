@@ -7,7 +7,7 @@ class EndpointConfig(BaseModel):
     change_record: str
 
 class SnowBrokerConfig(BaseModel):
-    hostname: HttpUrl
+    hostname: str
     endpoint: EndpointConfig
 
 class ECSS3Config(BaseModel):

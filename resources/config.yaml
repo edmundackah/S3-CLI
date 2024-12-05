@@ -1,11 +1,11 @@
 profiles:
   default:
-    prod_buckets: "prod,prd,prod-bucket"
+    prod_buckets: "prod,prd,buckets"
     snow_broker:
-      hostname: http://localhost:8080
+      hostname: 'http://127.0.0.1:5000'
       endpoint:
-        incident: /incident
-        change_record: /change/HBO%20Change
+        incident: incident
+        change_record: change/HBO%20Change
     ecs_s3:
       endpoint_url: http://localhost:9000
       region: us-east-1
@@ -17,8 +17,8 @@ profiles:
     snow_broker:
       hostname: http://localhost:8080
       endpoint:
-        incident: /incident
-        change_record: /change/HBO%20Change
+        incident: incident
+        change_record: change/HBO%20Change
     ecs_s3:
       endpoint_url: http://localhost:9000
       region: us-east-1
@@ -30,8 +30,8 @@ profiles:
     snow_broker:
       hostname: http://localhost:8080
       endpoint:
-        incident: /incident
-        change_record: /change/HBO%20Change
+        incident: incident
+        change_record: change/HBO%20Change
     ecs_s3:
       endpoint_url: http://localhost:9000
       region: us-east-1
