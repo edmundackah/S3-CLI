@@ -51,7 +51,6 @@ theme:
     - toc.follow
 plugins:
   - search
-  - blog
 
 extra_javascript:
   - js/custom.js
