@@ -2,6 +2,7 @@ from typing import Optional
 
 import typer
 
+from commands.manifest_schema import validate_manifest, validate_maintenance_yaml
 from utils.config_manager import ConfigManager
 from commands.list_objects import list_objects
 from commands.remove_objects import remove_objects
@@ -97,6 +98,18 @@ def list_objects_command(
 def view_change_record(mcr_number: str = typer.Option(..., "--number", help="e.g. MCR00000 / INC00000")):
     """Pulls change record or incident details from ServieNow"""
     find_change_record(mcr_number)
+
+
+@app.command("validate-manifest")
+def validate_release_manifest(file_path: str = typer.Option(..., "--file", help="Path to the release manifest")):
+    """Validates a release manifest using the JSON Schema"""
+    validate_manifest(file_path)
+
+
+@app.command("validate-maintenance-file")
+def validate_maintenance_file(file_path: str = typer.Option(..., "--file", help="Path to the maintenance flags file")):
+    """Validates the maintenance flags yaml using the JSON Schema"""
+    validate_maintenance_yaml(file_path)
 
 
 @app.command()

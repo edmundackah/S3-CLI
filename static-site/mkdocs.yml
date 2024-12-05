@@ -64,12 +64,16 @@ nav:
   - Docs:
       - Commands:
           - S3 Management:
+            - command/list-objects.md
             - command/remove-objects.md
             - command/deploy-snapshot.md
             - command/deploy-release.md
             - command/verify-maintenance.md
             - command/deploy-maintenance.md
           - command/change-record-details.md
+      - CD Components:
+        - cd-components/deployment-manifest.md
+        - cd-components/maintenance-flags.md
       - Configuration Management:
           - config-management/index.md
           - config-management/switching-profiles.md

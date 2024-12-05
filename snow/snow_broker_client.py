@@ -41,9 +41,7 @@ def fetch_record(change_record):
         elif response.status_code == 404:
             return NotFoundResponse.parse_obj(response.json())
         else:
-            raise ChangeRecordException(
-                f"Unexpected status code {response.status_code}: {response.text}"
-            )
+            raise ChangeRecordException(f"Unexpected status code {response.status_code}: {response.text}")
     except requests.RequestException as e:
         raise ChangeRecordException(f"An error occurred while making the API call: {e}")
 

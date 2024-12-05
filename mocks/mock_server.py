@@ -20,7 +20,7 @@ def internal_server_error(endpoint):
 
 # Directory for storing the .tgz file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TGZ_FILE_PATH = os.path.join(BASE_DIR, "example.tgz")
+TGZ_FILE_PATH = os.path.join(BASE_DIR, "package.tgz")
 
 @app.route("/download/tgz", methods=["GET"])
 def download_tgz():
@@ -33,7 +33,7 @@ def download_tgz():
         return send_file(
             TGZ_FILE_PATH,
             as_attachment=True,
-            download_name="example.tgz",
+            download_name="release-test.tgz",
             mimetype="application/gzip"
         )
     except Exception as e:
