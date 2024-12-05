@@ -76,5 +76,5 @@ nav:
           - config-management/switching-profiles.md
           - config-management/creating-a-profile.md
           - config-management/updating-a-profile.md
-  - Compiling a binary: compiling-into-a-native-binary.md
+  - compiling-into-a-native-binary.md
   - Release Notes: release-notes.md

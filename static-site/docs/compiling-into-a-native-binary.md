@@ -52,10 +52,28 @@ This will create a `dist` folder containing the binary file named `s3-cli`.
 
 Navigate to the `dist` folder and run the binary:
 
-```bash
-cd dist
-./s3-cli --help
+<div class="termy">
+
+```console
+$ ./s3-cli verify-maintenance --bucket-name prod --change-record INC000000
+
+2024-12-05 12:26:22,440 [INFO] CLI running with profile: default
+Validating change record: INC000000
+2024-12-05 12:26:22,566 [INFO] Connecting to S3 Server: ECS_S3
+2024-12-05 12:26:22,566 [INFO] Accessing ECS_S3 endpoint: http://localhost:9000
+2024-12-05 12:26:22,856 [INFO] Fetching maintenance.json from bucket prod...
++-------------+---------+
+| Flag        | State   |
++=============+=========+
+| devops:test | false   |
++-------------+---------+
+| xo          | false   |
++-------------+---------+
+| test2       | false   |
++-------------+---------+
 ```
+
+</div>
 
 You should see the help message and be able to execute all commands like before.
 
