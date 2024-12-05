@@ -1,4 +1,4 @@
-# Configuration Management
+# Getting Started
 
 This section explains how to configure and manage application profiles.
 Profiles are defined in a YAML configuration file located at `resources/config.yaml`.

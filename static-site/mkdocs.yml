@@ -41,6 +41,7 @@ theme:
     - navigation.sections
     - navigation.tracking
     - navigation.tabs.sticky
+    - navigation.tabs
     - navigation.instant
     - navigation.instant.progress
     - navigation.expand
@@ -75,9 +76,9 @@ nav:
         - cd-components/deployment-manifest.md
         - cd-components/maintenance-flags.md
       - Configuration Management:
-          - config-management/index.md
-          - config-management/switching-profiles.md
-          - config-management/creating-a-profile.md
-          - config-management/updating-a-profile.md
-  - compiling-into-a-native-binary.md
+        - config-management/getting-started.md
+        - config-management/switching-profiles.md
+        - config-management/creating-a-profile.md
+        - config-management/updating-a-profile.md
+      - compiling-into-a-native-binary.md
   - Release Notes: release-notes.md
