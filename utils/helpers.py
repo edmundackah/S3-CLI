@@ -47,24 +47,34 @@ def validate_change_record(change_record: Optional[str], ctx: typer.Context):
         bucket_name = ctx.params.get("bucket_name", "").lower()
 
         if bucket_name.startswith("prd") or bucket_name in list_to_array(config.prod_buckets):
-            record = fetch_record(change_record)
+            response = is_valid_change_record(change_record)
 
-            if change_record is None:
-                raise typer.BadParameter("A change record is required to modify prod environment")
-            elif record and isinstance(record, ChangeRecordResponse):
-                if record.valid:
-                    return change_record
-                else:
-                    raise typer.BadParameter(record.invalid_reason)
-            elif record and isinstance(record, NotFoundResponse):
-                raise typer.BadParameter(record.description)
+            if not response["isValid"]:
+                raise typer.BadParameter(response["message"])
             else:
-                raise typer.BadParameter("Fatal Error: Unable to connect to ServiceNow")
+                return change_record
         else:
             return change_record
     except Exception as e:
-        print(f"Unexpected Exception: {e}")
-        raise typer.BadParameter("Fatal Error: Unable to connect to ServiceNow")
+        raise typer.BadParameter(f"{e}")
+
+
+def is_valid_change_record(change_record: str):
+    record = fetch_record(change_record)
+    response = { "isValid": False }
+
+    if change_record is None:
+        response["message"] = "A change record is required to modify prod environment"
+    elif record and isinstance(record, ChangeRecordResponse):
+        if record.valid:
+            response["isValid"] = True
+        else:
+            response["message"] = record.invalid_reason
+    elif record and isinstance(record, NotFoundResponse):
+        response["message"] = record.description
+    else:
+        response["message"] = "Fatal Error: Unable to connect to ServiceNow"
+    return response
 
 
 def render_table(data: dict, table_title: str):
