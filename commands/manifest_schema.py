@@ -22,6 +22,7 @@ def validate_manifest(yaml_file: str, subgroup_id: int, gitlab_url: str, private
 
     # Fetch valid projects
     typer.secho("Fetching active projects from GitLab...", fg=typer.colors.BLUE)
+
     valid_projects = get_active_projects(subgroup_id, gitlab_url, private_token)
 
     # Validate GitLab project name
