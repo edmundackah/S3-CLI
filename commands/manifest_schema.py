@@ -1,12 +1,21 @@
 import json
 import sys
+from typing import List
 
+import requests
 import typer
 import yaml
+import logging
 from jsonschema import Draft7Validator
-from utils.helpers import is_valid_change_record
+
+from utils.config_manager import ConfigManager
+from utils.helpers import is_valid_change_record, TargetServer
 from utils.gitlab_util import get_active_projects
 
+config = ConfigManager.get_config()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 def validate_manifest(yaml_file: str, subgroup_id: int, gitlab_url: str, private_token: str):
     _validate_yaml(yaml_file, "resources/release-manifest-schema.json")
@@ -27,9 +36,10 @@ def validate_manifest(yaml_file: str, subgroup_id: int, gitlab_url: str, private
         typer.secho(f"❌ '{project_name}' does not exist in GitLab.", fg=typer.colors.RED)
         sys.exit(1)
 
+    artifact_exists(data.get("projectName"), data.get("version"), data.get("targetServer"))
+
     # Validate change record
-    change_record = data.get("changeRecord")
-    _validate_change_record(change_record)
+    _validate_change_record(data.get("changeRecord"))
 
 
 def validate_maintenance_yaml(yaml_file: str, subgroup_id: int, gitlab_url: str, private_token: str):
@@ -54,8 +64,36 @@ def validate_maintenance_yaml(yaml_file: str, subgroup_id: int, gitlab_url: str,
     typer.secho("✅ All Flag dependencies are valid!", fg=typer.colors.GREEN)
 
     # Validate change record
-    change_record = data.get("changeRecord")
-    _validate_change_record(change_record)
+    _validate_change_record(data.get("changeRecord"))
+
+
+def artifact_exists(application: str, version: str, servers: List[TargetServer]):
+    """Check if an artifact exists at a given Artifactory URL without downloading it."""
+
+    url_pattern: str = config.artifactory.spa_pattern
+    logging.info(f"Using pattern url: {url_pattern}")
+
+    # Check artifact exists in artifactory
+    for server in servers:
+        try:
+            if server == TargetServer.AWS_S3:
+                version = f"{version}-aws"
+
+            url: str = (url_pattern.replace("{{application}}", application)
+                        .replace("{{version}}", version))
+
+            response = requests.head(url)
+            logging.info(f"Checking artifact: [HEAD] {url} , status code: {response.status_code}")
+
+            # Check if file exists
+            if response.status_code == 200:
+                typer.secho(f"✅ '{application}'  version '{version}' found in artifactory", fg=typer.colors.GREEN)
+            else:
+                typer.secho(f"❌ '{application}'  version '{version}' not found", fg=typer.colors.RED)
+                sys.exit(1)
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Error checking artifact existence: {e}")
+            sys.exit(1)
 
 
 def _validate_change_record(change_record: str):

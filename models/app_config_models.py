@@ -1,5 +1,6 @@
-from pydantic import BaseModel, HttpUrl, validator
-from typing import Dict, List
+from typing import Dict
+
+from pydantic import BaseModel
 
 
 class EndpointConfig(BaseModel):
@@ -16,11 +17,14 @@ class ECSS3Config(BaseModel):
     access_key_var: str
     secret_key_var: str
 
+class ArtifactoryConfig(BaseModel):
+    spa_pattern: str
+
 class ProfileConfig(BaseModel):
     prod_buckets: str
+    artifactory: ArtifactoryConfig
     snow_broker: SnowBrokerConfig
     ecs_s3: ECSS3Config
-
 
 class AppConfig(BaseModel):
     profiles: Dict[str, ProfileConfig]

@@ -1,6 +1,8 @@
 profiles:
   default:
     prod_buckets: "prod,prd,buckets"
+    artifactory:
+      spa_pattern: "http://127.0.0.1:5000/artifactory/{{application}}/-/{{version}}/release-{{version}}.tgz"
     snow_broker:
       hostname: 'http://127.0.0.1:5000'
       endpoint:
@@ -14,6 +16,8 @@ profiles:
 
   dev:
     prod_buckets: "prod,prd,prod-bucket"
+    artifactory:
+      spa_pattern: "http://127.0.0.1:5000/artifactory/{{application}}/-/{{version}}/release-{{version}}.tgz"
     snow_broker:
       hostname: http://localhost:8080
       endpoint:
@@ -27,6 +31,8 @@ profiles:
 
   prod:
     prod_buckets: "prod,prd,prod-bucket"
+    artifactory:
+      spa_pattern: "http://127.0.0.1:5000/artifactory/{{application}}/-/{{version}}/release-{{version}}.tgz"
     snow_broker:
       hostname: http://localhost:8080
       endpoint:
