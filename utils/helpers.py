@@ -1,13 +1,15 @@
 import re
 import sys
-import typer
 from enum import Enum
 from typing import Optional
-from rich.table import Table
+
+import typer
 from rich.console import Console
-from utils.config_manager import ConfigManager
-from snow.snow_broker_client import fetch_record
+from rich.table import Table
+
 from models.snow_broker_models import ChangeRecordResponse, NotFoundResponse
+from snow.snow_broker_client import fetch_record
+from utils.config_manager import ConfigManager
 
 console = Console()
 config = ConfigManager.get_config()

@@ -1,6 +1,8 @@
-import os
-import yaml
 import logging
+import os
+
+import yaml
+
 from models.app_config_models import AppConfig, ProfileConfig
 
 # Configure logging

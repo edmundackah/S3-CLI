@@ -1,5 +1,6 @@
-import sys
 import logging
+import sys
+
 from tabulate import tabulate
 
 from utils.helpers import TargetServer

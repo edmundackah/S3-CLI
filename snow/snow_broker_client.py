@@ -1,8 +1,9 @@
 from urllib.parse import urljoin
 
 import requests
-from utils.config_manager import ConfigManager
+
 from models.snow_broker_models import ChangeRecordResponse, NotFoundResponse, ChangeRecordException
+from utils.config_manager import ConfigManager
 
 config = ConfigManager.get_config()
 

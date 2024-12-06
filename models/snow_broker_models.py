@@ -1,5 +1,7 @@
 from typing import Optional
+
 from pydantic import BaseModel, HttpUrl
+
 
 class ChangeRecordException(Exception):
     """Custom exception for handling unexpected API responses."""

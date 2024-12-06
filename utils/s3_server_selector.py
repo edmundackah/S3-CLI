@@ -1,7 +1,8 @@
+import logging
 import os
 import sys
+
 import boto3
-import logging
 
 from utils.config_manager import ConfigManager
 from utils.helpers import TargetServer

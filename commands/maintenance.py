@@ -1,7 +1,9 @@
-import sys
 import json
 import logging
+import sys
+
 from tabulate import tabulate
+
 from utils.helpers import TargetServer
 from utils.s3_server_selector import select_s3_server
 
