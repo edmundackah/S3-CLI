@@ -1,7 +1,6 @@
 import sys
-
-import gitlab
 import typer
+import gitlab
 
 
 def get_active_projects(subgroup_id: int, gitlab_url: str, private_token: str):
@@ -25,8 +24,7 @@ def get_active_projects(subgroup_id: int, gitlab_url: str, private_token: str):
         projects = subgroup.projects.list(all=True, include_subgroups=True, archived=False)
 
         for project in projects:
-            if not project.archived:
-                active_projects.add(project.name)
+            active_projects.add(project.name)
 
         return active_projects
     except Exception as e:
