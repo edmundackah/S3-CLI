@@ -1,16 +1,16 @@
 import json
+import logging
 import sys
 from typing import List
 
 import requests
 import typer
 import yaml
-import logging
 from jsonschema import Draft7Validator
 
 from utils.config_manager import ConfigManager
-from utils.helpers import is_valid_change_record, TargetServer
 from utils.gitlab_util import get_active_projects
+from utils.helpers import is_valid_change_record, TargetServer
 
 config = ConfigManager.get_config()
 

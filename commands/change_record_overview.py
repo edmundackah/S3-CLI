@@ -1,5 +1,7 @@
 import sys
+
 from rich.console import Console
+
 from models.snow_broker_models import ChangeRecordResponse, NotFoundResponse, ChangeRecordException
 from snow.snow_broker_client import fetch_record
 from utils.helpers import render_table

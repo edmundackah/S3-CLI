@@ -1,5 +1,6 @@
-import sys
 import logging
+import sys
+
 from utils.helpers import TargetServer
 from utils.s3_server_selector import select_s3_server
 

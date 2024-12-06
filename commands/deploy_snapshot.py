@@ -1,12 +1,13 @@
-import os
-import sys
 import logging
 import mimetypes
+import os
+import sys
+
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
 from commands.remove_objects import remove_objects
 from utils.helpers import TargetServer
 from utils.s3_server_selector import select_s3_server
-from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
