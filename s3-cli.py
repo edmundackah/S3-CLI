@@ -8,6 +8,7 @@ from commands.deploy_snapshot import deploy_snapshot
 from commands.list_objects import list_objects
 from commands.maintenance import verify_maintenance, deploy_maintenance
 from commands.manifest_schema import validate_manifest, validate_maintenance_yaml
+from commands.pipeline_checks import check_team_folder
 from commands.remove_objects import remove_objects
 from utils.config_manager import ConfigManager
 from utils.helpers import validate_prefix, validate_bucket_name, validate_change_record, TargetServer, validate_boolean
@@ -119,6 +120,17 @@ def validate_maintenance_file(
 ):
     """Validates the maintenance flags yaml using the JSON Schema"""
     validate_maintenance_yaml(file_path, subgroup_id, gitlab_url, gitlab_token)
+
+
+@app.command("validate-folder-names")
+def validate_path(
+        file_path: str = typer.Option(..., "--file-path", help="Path to validate folder names."),
+        subgroup_id: int = typer.Option(..., "--subgroup-id", help="Top level GitLab subgroup ID to validate against."),
+        gitlab_url: str = typer.Option(..., "--gitlab-url", help="URL of the GitLab server."),
+        gitlab_token: str = typer.Option(..., "--gitlab-token", help="Private access token for GitLab API.")
+):
+    """Validates folder names in the given path against GitLab subgroups and nested subgroups."""
+    check_team_folder(file_path, gitlab_url, gitlab_token, subgroup_id)
 
 
 @app.command()

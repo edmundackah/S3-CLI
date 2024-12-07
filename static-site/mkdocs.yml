@@ -72,6 +72,8 @@ nav:
             - command/verify-maintenance.md
             - command/deploy-maintenance.md
           - command/change-record-details.md
+          - Release Pipeline Commands:
+              - command/release-pipeline/folder-name-validator.md
       - CD Components:
         - cd-components/deployment-manifest.md
         - cd-components/maintenance-flags.md

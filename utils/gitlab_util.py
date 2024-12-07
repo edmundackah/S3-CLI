@@ -30,3 +30,18 @@ def get_active_projects(subgroup_id: int, gitlab_url: str, private_token: str):
     except Exception as e:
         typer.secho(f"An error occurred: {e}", fg=typer.colors.RED)
         sys.exit(1)
+
+
+def get_gitlab_subgroups(gitlab_url: str, private_token: str, group_id: int) -> set:
+    """Fetch all subgroup and nested subgroup names from GitLab."""
+    gl = gitlab.Gitlab(gitlab_url, private_token=private_token)
+    subgroups = set()
+    groups_to_process = [gl.groups.get(group_id)]
+
+    while groups_to_process:
+        current_group = groups_to_process.pop()
+        for subgroup in current_group.subgroups.list(all=True):
+            subgroups.add(subgroup.name)
+            groups_to_process.append(gl.groups.get(subgroup.id))
+
+    return subgroups
