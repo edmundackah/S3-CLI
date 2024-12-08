@@ -11,7 +11,7 @@ validates a change record with ServiceNow and uploads the contents of the `packa
 ## Usage
 
 ```sh
-s3-cli deploy-release --url <URL> --bucket-name <BucketName> --prefix <Prefix> --change-record <ChangeRecord>
+s3-cli deploy-release --application <Application> --version <Version> --bucket-name <BucketName> --prefix <Prefix> --change-record <ChangeRecord>
 ```
 
 ## Arguments
@@ -19,7 +19,9 @@ s3-cli deploy-release --url <URL> --bucket-name <BucketName> --prefix <Prefix> -
 !!! info
     This command will connect to ECS S3 if a target server is not provided.
 
-- `--url`: The URL of the `.tgz` file to download.
+- `--application`: The name of the application.
+
+- `--version`: Application version number.
 
 - `--change-record`: The change record to validate with ServiceNow.
 
@@ -34,7 +36,7 @@ s3-cli deploy-release --url <URL> --bucket-name <BucketName> --prefix <Prefix> -
 <div class="termy">
 
 ```console
-$ s3-cli deploy-release --url "http://127.0.0.1:5000/download/tgz" --bucket-name prod --prefix release-test --change-record INC000000
+$ s3-cli deploy-release --application test-app --version 1.0.0-aws --bucket-name prod --prefix release-test --change-record INC000000 --target-server AWS_S3
 
 2024-12-05 20:52:37,110 [INFO] CLI running with profile: default
 Validating change record: INC000000

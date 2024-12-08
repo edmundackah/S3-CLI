@@ -8,18 +8,19 @@ import tarfile
 import requests
 
 from commands.remove_objects import remove_objects
-from utils.helpers import TargetServer
+from utils.helpers import TargetServer, create_artifact_url
 from utils.s3_server_selector import select_s3_server
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
-def deploy_release(artifactory_url: str, bucket_name: str, prefix: str, target_server: TargetServer):
+def deploy_release(application: str, version: str, bucket_name: str, prefix: str, target_server: TargetServer):
     """
     Deploy the release package to an S3 bucket.
     """
 
     # Download the .tgz file
+    artifactory_url = create_artifact_url(application, version)
     tgz_file = artifactory_url.split("/")[-1]
     try:
         logging.info(f"Downloading release package from {artifactory_url}...")

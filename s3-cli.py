@@ -31,7 +31,8 @@ def deploy_snapshot_command(
 
 @app.command("deploy-release")
 def deploy_release_command(
-    url: str = typer.Option(..., "--url", help="Artifactory URL of the release to deploy"),
+    application: str = typer.Option(..., "--application", help="Name of the application"),
+    app_version: str = typer.Option(..., "--version", help="Application version number"),
     bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
     prefix: str = typer.Option(..., "--prefix", help="Object key prefix", callback=validate_prefix),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
@@ -40,7 +41,7 @@ def deploy_release_command(
                                                 callback=validate_change_record)
 ):
     """Deploy a release to the specified target server."""
-    deploy_release(url, bucket_name, prefix, target_server)
+    deploy_release(application, app_version, bucket_name, prefix, target_server)
 
 
 @app.command("remove-objects")

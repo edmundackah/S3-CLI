@@ -99,3 +99,8 @@ def render_table(data: dict, table_title: str):
         sys.exit(0)
     except Exception as e:
         console.print(f"[bold red]Error rendering table:[/bold red] {e}")
+
+
+def create_artifact_url(application: str, version: str):
+    return (config.artifactory.spa_pattern.replace("{{application}}", application)
+                .replace("{{version}}", version))

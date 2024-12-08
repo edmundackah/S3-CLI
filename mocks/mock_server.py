@@ -1,10 +1,12 @@
 import os
 
-from flasgger import Swagger
-from flask import Flask, jsonify, make_response, request, send_file
+from flask import Flask, jsonify, make_response, request, send_file, send_from_directory, abort
 
 app = Flask(__name__)
-swagger = Swagger(app)
+
+# Directory for storing the .tgz file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TGZ_FILE_PATH = os.path.join(BASE_DIR, "package.tgz")
 
 # Helper function for a 500 response
 def internal_server_error(endpoint):
@@ -18,9 +20,23 @@ def internal_server_error(endpoint):
     return make_response(jsonify(response), 500)
 
 
-# Directory for storing the .tgz file
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TGZ_FILE_PATH = os.path.join(BASE_DIR, "package.tgz")
+@app.route('/artifactory/<application>/-/<version>/<filename>', methods=['GET', 'HEAD'])
+def serve_file(application, version, filename):
+    try:
+        print(f"looking for file path: {BASE_DIR}/")
+
+        if request.method == 'HEAD':
+            # Check if the file exists without sending it
+            with open(f"{BASE_DIR}/{filename}.tgz", 'rb'):
+                return '', 200
+        # Serve the file for GET requests
+        return send_from_directory(f"{BASE_DIR}/", filename, as_attachment=False)
+    except FileNotFoundError:
+        abort(404, description="File not found")
+    except Exception as e:
+        print(e)
+        abort(500, description=str(e))
+
 
 @app.route("/download/tgz", methods=["GET"])
 def download_tgz():

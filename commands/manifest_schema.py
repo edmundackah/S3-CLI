@@ -8,11 +8,8 @@ import typer
 import yaml
 from jsonschema import Draft7Validator
 
-from utils.config_manager import ConfigManager
 from utils.gitlab_util import get_active_projects
-from utils.helpers import is_valid_change_record, TargetServer
-
-config = ConfigManager.get_config()
+from utils.helpers import is_valid_change_record, TargetServer, create_artifact_url
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -71,17 +68,13 @@ def validate_maintenance_yaml(yaml_file: str, subgroup_id: int, gitlab_url: str,
 def artifact_exists(application: str, version: str, servers: List[TargetServer]):
     """Check if an artifact exists at a given Artifactory URL without downloading it."""
 
-    url_pattern: str = config.artifactory.spa_pattern
-    logging.info(f"Using pattern url: {url_pattern}")
-
     # Check artifact exists in artifactory
     for server in servers:
         try:
             if server == TargetServer.AWS_S3:
                 version = f"{version}-aws"
 
-            url: str = (url_pattern.replace("{{application}}", application)
-                        .replace("{{version}}", version))
+            url: str = create_artifact_url(application, version)
 
             response = requests.head(url)
             logging.info(f"Checking artifact: [HEAD] {url} , status code: {response.status_code}")
