@@ -30,7 +30,12 @@ def serve_file(application, version, filename):
             with open(f"{BASE_DIR}/{filename}.tgz", 'rb'):
                 return '', 200
         # Serve the file for GET requests
-        return send_from_directory(f"{BASE_DIR}/", filename, as_attachment=False)
+        return send_file(
+            f"{BASE_DIR}/{filename}",
+            as_attachment=True,
+            download_name=filename,
+            mimetype="application/gzip"
+        )
     except FileNotFoundError:
         abort(404, description="File not found")
     except Exception as e:

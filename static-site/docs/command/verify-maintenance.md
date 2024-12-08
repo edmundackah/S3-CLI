@@ -10,7 +10,7 @@ It displays the results in a table format.
     A valid change record is required when interacting with a production S3 bucket.
 
 ```sh
-s3-cli deploy-maintenance --bucket-name <BucketName> --change-record <ChangeRecord> --target-server <TargetServer>
+s3-cli verify-maintenance --bucket-name <BucketName> --change-record <ChangeRecord> --target-server <TargetServer>
 ```
 
 ## Arguments

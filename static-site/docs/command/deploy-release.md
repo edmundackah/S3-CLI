@@ -36,31 +36,32 @@ s3-cli deploy-release --application <Application> --version <Version> --bucket-n
 <div class="termy">
 
 ```console
-$ s3-cli deploy-release --application test-app --version 1.0.0-aws --bucket-name prod --prefix release-test --change-record INC000000 --target-server AWS_S3
-
-2024-12-05 20:52:37,110 [INFO] CLI running with profile: default
+$ s3-cli deploy-release --application test-app --version 1.0.0 --bucket-name prod --prefix release-test --change-record INC000000 --target-server ECS_S3
+2024-12-08 12:38:05,266 [INFO] CLI running with profile: default
 Validating change record: INC000000
-2024-12-05 20:52:37,142 [INFO] Downloading release package from http://127.0.0.1:5000/download/tgz...
-2024-12-05 20:52:37,143 [INFO] Downloaded tgz successfully.
-2024-12-05 20:52:37,143 [INFO] Extracting tgz...
-2024-12-05 20:52:37,146 [INFO] Extracted contents to release_extract.
-2024-12-05 20:52:37,146 [INFO] Connecting to S3 Server: ECS_S3
-2024-12-05 20:52:37,146 [INFO] Accessing ECS_S3 endpoint: http://localhost:9000
-2024-12-05 20:52:37,187 [INFO] Listing objects with prefix 'release-test' in bucket 'prod'...
-2024-12-05 20:52:37,193 [WARNING] No objects found with prefix 'release-test' in bucket 'prod'.
-2024-12-05 20:52:37,193 [INFO] Uploading contents of release_extract/package/build to bucket prod with prefix release-test...
-2024-12-05 20:52:37,193 [INFO] Connecting to S3 Server: ECS_S3
-2024-12-05 20:52:37,193 [INFO] Accessing ECS_S3 endpoint: http://localhost:9000
-2024-12-05 20:52:37,196 [INFO] Uploading release_extract/package/build/credentials 2.json to S3://prod/release-test/credentials 2.json with Content-Type: application/json
-2024-12-05 20:52:37,202 [INFO] Uploaded release_extract/package/build/credentials 2.json successfully.
-2024-12-05 20:52:37,202 [INFO] Uploaded release_extract/package/build to S3://prod/release-test/credentials 2.json.
-2024-12-05 20:52:37,203 [INFO] Uploading release_extract/package/build/maintenance.json to S3://prod/release-test/maintenance.json with Content-Type: application/json
-2024-12-05 20:52:37,207 [INFO] Uploaded release_extract/package/build/maintenance.json successfully.
-2024-12-05 20:52:37,207 [INFO] Uploaded release_extract/package/build to S3://prod/release-test/maintenance.json.
-2024-12-05 20:52:37,215 [INFO] Release package deployed successfully.
-2024-12-05 20:52:37,215 [INFO] Cleaning up temporary files...
-2024-12-05 20:52:37,215 [INFO] Removed tgz.
-2024-12-05 20:52:37,216 [INFO] Removed release_extract.
-2024-12-05 20:52:37,216 [INFO] Deployment completed successfully.
+
+2024-12-08 12:38:05,319 [INFO] Downloading release package from http://127.0.0.1:5000/artifactory/test-app/-/1.0.0/test-app-1.0.0.tgz...
+2024-12-08 12:38:05,326 [INFO] Downloaded test-app-1.0.0.tgz successfully.
+2024-12-08 12:38:05,326 [INFO] Extracting test-app-1.0.0.tgz...
+2024-12-08 12:38:05,338 [INFO] Extracted contents to release_extract.
+2024-12-08 12:38:05,338 [INFO] Connecting to S3 Server: ECS_S3
+2024-12-08 12:38:05,338 [INFO] Accessing ECS_S3 endpoint: http://localhost:9000
+2024-12-08 12:38:05,398 [INFO] Listing objects with prefix 'release-test' in bucket 'prod'...
+2024-12-08 12:38:05,405 [INFO] Found 4 objects to delete.
+2024-12-08 12:38:05,408 [INFO] Successfully deleted 4 objects.
+2024-12-08 12:38:05,408 [INFO] Uploading contents of release_extract/package/build to bucket prod with prefix release-test...
+2024-12-08 12:38:05,408 [INFO] Connecting to S3 Server: ECS_S3
+2024-12-08 12:38:05,408 [INFO] Accessing ECS_S3 endpoint: http://localhost:9000
+2024-12-08 12:38:05,412 [INFO] Uploading release_extract/package/build/preview.png to S3://prod/release-test/preview.png with Content-Type: image/png
+2024-12-08 12:38:05,428 [INFO] Uploaded release_extract/package/build/preview.png successfully.
+2024-12-08 12:38:05,428 [INFO] Uploaded release_extract/package/build to S3://prod/release-test/preview.png.
+
+....
+
+2024-12-08 12:38:05,468 [INFO] Release package deployed successfully.
+2024-12-08 12:38:05,468 [INFO] Cleaning up temporary files...
+2024-12-08 12:38:05,468 [INFO] Removed test-app-1.0.0.tgz.
+2024-12-08 12:38:05,469 [INFO] Removed release_extract.
+2024-12-08 12:38:05,469 [INFO] Deployment completed successfully.
 ```
 </div>
