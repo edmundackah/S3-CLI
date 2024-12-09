@@ -29,7 +29,7 @@ def select_s3_server(target_server: TargetServer):
             region_name=config.ecs_s3.region,
             verify=False
         )
-    elif target_server == TargetServer.ECS_S3:
+    else:
         logging.error(f"{target_server} support is not implemented yet.")
         sys.exit(1)
 
