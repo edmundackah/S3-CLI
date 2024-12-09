@@ -68,13 +68,17 @@ def deploy_maintenance(bucket_name: str, flags: str, state: bool, target_server:
 
     try:
         logging.info(f"Uploading updated {MAINTENANCE_FILE} to bucket {bucket_name}...")
-        s3_client.put_object(
-            Body=updated_contents,
-            Bucket=bucket_name,
-            Key=MAINTENANCE_FILE,
-            ACL='public-read',
-            ContentType="application/json"
-        )
+        extra_args = {'ContentType': "application/json"}
+
+        # Add server-specific parameters
+        if target_server == TargetServer.AWS_S3:
+            extra_args['ServerSideEncryption'] = 'AES256'
+        else:
+            extra_args['ACL'] = 'public-read'
+
+        # Upload the object
+        logging.info(f"Uploading maintenance file to S3 bucket {bucket_name}...")
+        s3_client.put_object(Body=updated_contents, Bucket=bucket_name, Key=MAINTENANCE_FILE, **extra_args)
         logging.info("Maintenance flags deployed successfully.")
         sys.exit(1)
     except Exception as e:
