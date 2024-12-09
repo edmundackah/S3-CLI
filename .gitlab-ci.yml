@@ -1,0 +1,161 @@
+image: python:3.9-bullseye
+
+stages:
+  - .pre
+  - trigger
+  - validate
+
+
+variables:
+  PROD_ENV: prd
+
+.env_matrix:
+  parallel:
+    matrix:
+    - ENV:
+      - prd
+      - test
+      - sandbox
+
+
+single-maintenance-file-per-env:
+  stage: validate
+
+  script:
+    - chmod +x ./ci/scripts/single-maintenance-file-per-env.sh
+    - ./ci/scripts/single-maintenance-file-per-env.sh
+
+single-env-change:
+  stage: validate
+
+  script:
+    - chmod +x ./ci/scripts/single-env-change.sh
+    - ./ci/scripts/single-env-change.sh
+
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
+    - when: never
+
+
+manifest-exist:
+  stage: validate
+
+  extends: .env_matrix
+
+  script:
+    - cd "release/${ENV}"
+    - chmod +x ./ci/scripts/manifest-exist.sh
+    - ./ci/scripts/manifest-exist.sh
+
+
+folder-names:
+  stage: validate
+
+  extends: .env_matrix
+
+  script:
+    - cd release/${ENV}
+    - s3-cli validate-folder-names --file-path <FilePath> --subgroup-id <SubgroupID> --gitlab-url <GitlabUrl> --gitlab-token <Token>
+
+
+manifest-files:
+  stage: validate
+
+  extends: .env_matrix
+
+  needs: ["manifest-exist"]
+
+  script:
+    - |
+      OUTPUT_FILE="releases-${ENV}.txt"
+      echo "Retrieve modified files in the 'release' directory ending with '-release.yml' or '-release.yaml', excluding deleted files"
+      git diff --name-status --diff-filter=AM HEAD~1 HEAD -- "release/${ENV}/" | awk '$2 ~ /-release\.ya?ml$/ {print $2}' > "$OUTPUT_FILE"
+
+      if [[ -s "$OUTPUT_FILE" ]]; then
+        echo "Modified '-release.yml' or '-release.yaml' files in the 'release' directory:"
+
+        if [ "$ENV" != "$PROD_ENV" ]; then
+            echo "Starting mock server, validating env ${ENV}"
+            python ./mocks/mock_server.py &
+        fi
+        
+        while IFS= read -r line || [[ -n "$line" ]]; do
+          
+          if [[ -n "$line" ]]; then
+            echo checking manifest file "$line"
+            s3-cli validate-manifest --file "$line" --subgroup-id <INSERT_SUBGROUP_ID> --gitlab-url <GITLAB_URL> --gitlab-token <GITLAB_TOKEN>
+          fi
+        done < "$OUTPUT_FILE"
+      fi
+    - echo "No modified '-release.yml' or '-release.yaml' files found in the 'release' directory."
+
+  artifacts:
+    when: always
+    paths:
+      - "*.txt"
+
+
+maintenance-flags:
+  stage: validate
+
+  extends: .env_matrix
+
+  script:
+    - |
+      if [ "$ENV" != "$PROD_ENV" ]; then
+          echo "Starting mock server, validating env ${ENV}"
+          python ./mocks/mock_server.py &
+      fi
+      FLAG_PATH="release/${ENV}/maintenance-flags.yml"
+      s3-cli validate-maintenance-file --file "$FLAG_PATH" --subgroup-id <INSERT_SUBGROUP_ID> --gitlab-url <GITLAB_URL> --gitlab-token <GITLAB_TOKEN>
+      AWS_FLAG_PATH="release/${ENV}/maintenance-flags-aws.yml"
+      if [ -e "${AWS_FLAG_PATH}" ]; then
+        s3-cli validate-maintenance-file --file "${AWS_FLAG_PATH}" --subgroup-id <INSERT_SUBGROUP_ID> --gitlab-url <GITLAB_URL> --gitlab-token <GITLAB_TOKEN>
+      fi
+
+  artifacts:
+    when: always
+    paths:
+      - "*.txt"
+
+
+create-deployment:
+  stage: .pre
+
+  script:
+    - pip install pyyaml jinja2
+    - chmod +x ./ci/scripts/deployment/get-modified-files.sh
+    - ./ci/scripts/deployment/get-modified-files.sh
+    - python ./ci/scripts/deployment/create-deployment-pipeline.py
+
+  artifacts:
+    when: always
+    paths:
+      - "*.txt"
+      - "*.yml"
+
+start-deployment:
+  stage: trigger
+
+  when: manual
+
+  trigger:
+    include:
+      - artifact: generated-pipeline.yml
+        job: create-deployment
+    strategy: depend
+
+
+
+# compile-test:
+#   stage: .pre
+
+#   script:
+#     - pip install -r requirements.txt
+#     - pyinstaller --onefile s3-cli.py
+#     - chmod +x ./dist/s3-cli
+#     - ./dist/s3-cli --help
+#     - echo "Starting mock server"
+#     - python ./ci/scripts/mocks/mock_server.py &
+#     - ./dist/s3-cli view-change-record --number INC000000
