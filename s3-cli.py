@@ -1,5 +1,5 @@
 from typing import Optional
-
+import urllib3
 import typer
 
 from commands.change_record_overview import find_change_record
@@ -18,6 +18,9 @@ app = typer.Typer(help="S3 Deployment CLI")
 
 # Load the configuration at the start
 config = ConfigManager.get_config()
+
+# Supress SSL verification warnings when deploying to ECS_S3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 @app.command("deploy-snapshot")
 def deploy_snapshot_command(

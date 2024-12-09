@@ -27,6 +27,20 @@ class PipelineGenerator:
             print(f"Error parsing YAML file '{file_path}': {e}")
             return None
 
+    def extract_environment(self, file_path: str) -> str:
+        """Extracts the environment name from the given file path."""
+
+        # Split the path into parts
+        parts = file_path.split(os.sep)
+
+        # Find the "release" folder and extract the next folder
+        if "release" in parts:
+            release_index = parts.index("release")
+            if release_index + 1 < len(parts):
+                return parts[release_index + 1]
+
+        raise ValueError("Environment folder not found in the path")
+
     def load_template(self):
         """Load the unified Jinja2 template."""
         with open(self.template_file, 'r') as file:
@@ -44,7 +58,7 @@ class PipelineGenerator:
             if not yaml_data:
                 continue
 
-            env_name = os.path.basename(os.path.dirname(file_path))
+            env_name = self.extract_environment(file_path)
             is_aws = "-aws" in file_path
             off_flags = ",".join([flag["flag"] for flag in yaml_data.get("flags", []) if not flag["state"]])
             on_flags = ",".join([flag["flag"] for flag in yaml_data.get("flags", []) if flag["state"]])
@@ -53,6 +67,7 @@ class PipelineGenerator:
                 "env": env_name,
                 "target": "-aws" if is_aws else "",
                 "target_server": "AWS_S3" if is_aws else "ECS_S3",
+                "active_profile": "prod" if env_name.lower() == "prd" else "dev",
                 "bucket_name": self.bucket_name_selector(env_name, "AWS_S3" if is_aws else "ECS_S3"),
                 "change_record": yaml_data.get("changeRecord", "N/A"),
                 "off_flags": off_flags or "N/A",
@@ -69,7 +84,9 @@ class PipelineGenerator:
             if not yaml_data:
                 continue
 
-            env_name = os.path.basename(os.path.dirname(file_path))
+            env_name = self.extract_environment(file_path)
+            print(f"file path: {file_path}... env name: {env_name}")
+
             for server in yaml_data.get("targetServer", []):
                 target = "-aws" if server == "AWS_S3" else ""
                 job_context = {
@@ -77,6 +94,7 @@ class PipelineGenerator:
                     "version": yaml_data.get("version"),
                     "target": target,
                     "target_server": server,
+                    "active_profile": "prod" if env_name.lower() == "prd" else "dev",
                     "bucket_name": self.bucket_name_selector(env_name, server),
                     "prefix": yaml_data.get("homepage").lower().lstrip("/"),
                     "change_record": yaml_data.get("changeRecord"),
