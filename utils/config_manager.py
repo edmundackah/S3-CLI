@@ -10,9 +10,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 
 def load_config(file_path: str, active_profile: str) -> ProfileConfig:
-    """
-    Load configuration for the specified active profile.
-    """
+    """Load configuration for the specified active profile."""
     with open(file_path, "r") as file:
         data = yaml.safe_load(file)
     app_config = AppConfig(**data)

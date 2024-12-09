@@ -10,10 +10,11 @@ from commands.maintenance import verify_maintenance, deploy_maintenance
 from commands.manifest_schema import validate_manifest, validate_maintenance_yaml
 from commands.pipeline_checks import check_team_folder
 from commands.remove_objects import remove_objects
+from commands.version_management import get_app_version, VersionIncrement, bump_app_version
 from utils.config_manager import ConfigManager
 from utils.helpers import validate_prefix, validate_bucket_name, validate_change_record, TargetServer, validate_boolean
 
-app = typer.Typer()
+app = typer.Typer(help="S3 Deployment CLI")
 
 # Load the configuration at the start
 config = ConfigManager.get_config()
@@ -134,9 +135,19 @@ def validate_path(
     check_team_folder(file_path, gitlab_url, gitlab_token, subgroup_id)
 
 
-@app.command()
+@app.command("version")
 def version():
-    typer.echo("S3 CLI Version: 1.0.0")
+    """Reads the version number from the .version file in the resources folder."""
+    get_app_version()
+
+
+@app.command("bump-version")
+def bump_version(
+        increment: VersionIncrement = typer.Option(VersionIncrement.PATCH,"--increment",
+                                                   help="The part of the version to bump (MAJOR, MINOR, or PATCH)")
+):
+    """Bumps the version number in the .version file."""
+    bump_app_version(increment)
 
 
 if __name__ == "__main__":
