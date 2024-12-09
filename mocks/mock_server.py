@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, jsonify, make_response, request, send_file, send_from_directory, abort
+from flask import Flask, jsonify, make_response, request, send_file, abort
 
 app = Flask(__name__)
 

@@ -1,6 +1,7 @@
 import sys
-import typer
+
 import gitlab
+import typer
 
 
 def get_active_projects(subgroup_id: int, gitlab_url: str, private_token: str):
