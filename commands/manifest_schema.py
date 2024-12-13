@@ -8,6 +8,7 @@ import typer
 import yaml
 from jsonschema import Draft7Validator
 
+from utils.file_picker import get_resource_path
 from utils.gitlab_util import get_active_projects
 from utils.helpers import is_valid_change_record, TargetServer, create_artifact_url
 
@@ -107,7 +108,9 @@ def _validate_yaml(yaml_file: str, schema: str):
             yaml_data = yaml.safe_load(yf)
 
         # Load the JSON schema
-        with open(schema, 'r') as sf:
+        schema_path = get_resource_path(schema)
+
+        with open(schema_path, 'r') as sf:
             json_schema = json.load(sf)
 
         validator = Draft7Validator(json_schema)

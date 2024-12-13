@@ -3,6 +3,8 @@ from pathlib import Path
 
 import typer
 
+from utils.file_picker import get_resource_path
+
 
 class VersionIncrement(str, Enum):
     MAJOR = "MAJOR"
@@ -12,7 +14,7 @@ class VersionIncrement(str, Enum):
 
 def get_app_version():
     """Reads the version number from the .version file in the resources folder."""
-    version_file_path = Path("resources/.version")
+    version_file_path = Path(get_resource_path("resources/.version"))
 
     if not version_file_path.exists():
         typer.secho("Warning: .version file is missing in the resources folder.", fg=typer.colors.YELLOW)
@@ -35,7 +37,7 @@ def bump_app_version(part: VersionIncrement):
     Args:
         part (VersionIncrement): The part of the version to bump (MAJOR, MINOR, or PATCH).
     """
-    version_file_path = Path("resources/.version")
+    version_file_path = Path(get_resource_path("resources/.version"))
 
     if not version_file_path.exists():
         typer.secho("Error: .version file is missing in the resources folder.", fg=typer.colors.RED)

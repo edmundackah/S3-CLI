@@ -1,7 +1,7 @@
 import os
 
-from flask import Flask, jsonify, make_response, request, send_file
 from flasgger import Swagger
+from flask import Flask, jsonify, make_response, request, send_file
 
 app = Flask(__name__)
 swagger = Swagger(app)

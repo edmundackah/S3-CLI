@@ -4,6 +4,7 @@ import os
 import yaml
 
 from models.app_config_models import AppConfig, ProfileConfig
+from utils.file_picker import get_resource_path
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -27,7 +28,7 @@ class ConfigManager:
     @classmethod
     def get_config(cls):
         if cls._config is None:
-            config_path = "resources/config.yaml"
+            config_path = get_resource_path('resources/config.yaml')
             active_profile = os.getenv("ACTIVE_PROFILE", "default")
             logging.info(f"CLI running with profile: {active_profile}")
             cls._config = load_config(config_path, active_profile)

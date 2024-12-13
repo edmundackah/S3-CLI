@@ -1,6 +1,7 @@
 from typing import Optional
-import urllib3
+
 import typer
+import urllib3
 
 from commands.change_record_overview import find_change_record
 from commands.deploy_release import deploy_release
