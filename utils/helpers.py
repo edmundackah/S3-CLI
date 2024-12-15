@@ -39,7 +39,7 @@ def validate_prefix(value: str) -> str:
     # Validate the homepage format
     if not value or value == "/":
         raise typer.BadParameter(
-            "The homepage must not be empty or just '/'. It should look like '/path/to/resource' or '/auth'.")
+            "The homepage must not be empty or just '/'. It should look like '/path/to/resource' or '/path'.")
 
     if not value.startswith("/"):
         raise typer.BadParameter("The homepage must start with a '/'.")
@@ -54,7 +54,7 @@ def validate_prefix(value: str) -> str:
 
 def validate_bucket_name(bucket_name: str):
     """Validate bucket name is non-prod."""
-    if bucket_name.startswith("prd") or bucket_name in list_to_array(config.prod_buckets):
+    if bucket_name in list_to_array(config.prod_buckets):
         raise typer.BadParameter("Production buckets are not supported by this command")
     return bucket_name
 
@@ -64,7 +64,7 @@ def validate_change_record(change_record: Optional[str], ctx: typer.Context):
     try:
         bucket_name = ctx.params.get("bucket_name", "").lower()
 
-        if bucket_name.startswith("prd") or bucket_name in list_to_array(config.prod_buckets):
+        if bucket_name in list_to_array(config.prod_buckets):
             response = is_valid_change_record(change_record)
 
             if not response["isValid"]:
