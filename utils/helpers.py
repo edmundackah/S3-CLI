@@ -29,11 +29,27 @@ def validate_boolean(value: str):
     return value.lower()
 
 
-def validate_prefix(prefix: str):
-    """Validate that the prefix does not start or end with special characters."""
-    if re.match(r"^[^\w]|[^\w]$", prefix):
-        raise typer.BadParameter("The prefix cannot start or end with special characters.")
-    return prefix
+def validate_prefix(value: str) -> str:
+    # regex pattern for valid homepage paths
+    homepage_pattern = re.compile(r"^/[a-zA-Z0-9-/]+$")
+
+    # Strip leading and trailing slashes
+    stripped_value = value.strip("/")
+
+    # Validate the homepage format
+    if not value or value == "/":
+        raise typer.BadParameter(
+            "The homepage must not be empty or just '/'. It should look like '/path/to/resource' or '/auth'.")
+
+    if not value.startswith("/"):
+        raise typer.BadParameter("The homepage must start with a '/'.")
+
+    if not homepage_pattern.match(value):
+        raise typer.BadParameter(
+            "The homepage can only contain alphanumeric characters, dashes, and slashes, and must follow the format '/path/to/resource'."
+        )
+
+    return stripped_value
 
 
 def validate_bucket_name(bucket_name: str):
