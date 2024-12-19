@@ -32,7 +32,7 @@ s3-cli list-objects --bucket-name <BucketName> --prefix <Prefix> --change-record
 <div class="termy">
 
 ```console
-$ s3-cli list-objects --bucket-name cli-demo --prefix doc-test
+$ s3-cli list-objects --bucket-name cli-demo --prefix /doc-test
 
 2024-12-05 20:33:47,636 [INFO] CLI running with profile: default
 2024-12-05 20:33:47,663 [INFO] Connecting to S3 Server: ECS_S3
