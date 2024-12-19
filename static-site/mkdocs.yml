@@ -66,6 +66,7 @@ nav:
       - Commands:
           - S3 Management:
             - command/list-objects.md
+            - command/upload-file.md
             - command/remove-objects.md
             - command/deploy-snapshot.md
             - command/deploy-release.md
