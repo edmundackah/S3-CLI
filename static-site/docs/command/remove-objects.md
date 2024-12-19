@@ -34,7 +34,7 @@ s3-cli remove-objects --bucket-name <BucketName> --prefix <Prefix> --change-reco
 <div class="termy">
 
 ```console
-$ s3-cli remove-objects --bucket-name dev --prefix snapshot
+$ s3-cli remove-objects --bucket-name dev --prefix /snapshot
 
 2024-12-03 12:47:42,273 [INFO] Connecting to S3 Server: ECS_S3
 2024-12-03 12:47:42,325 [INFO] Listing objects with prefix 'snapshot' in bucket 'dev'...

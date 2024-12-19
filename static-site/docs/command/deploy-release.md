@@ -36,7 +36,7 @@ s3-cli deploy-release --application <Application> --version <Version> --bucket-n
 <div class="termy">
 
 ```console
-$ s3-cli deploy-release --application test-app --version 1.0.0 --bucket-name prod --prefix release-test --change-record INC000000 --target-server ECS_S3
+$ s3-cli deploy-release --application test-app --version 1.0.0 --bucket-name prod --prefix /release-test --change-record INC000000 --target-server ECS_S3
 2024-12-08 12:38:05,266 [INFO] CLI running with profile: default
 Validating change record: INC000000
 

@@ -8,7 +8,7 @@ import requests
 
 from commands.remove_objects import remove_objects
 from utils.helpers import TargetServer, create_artifact_url
-from utils.s3_util import upload_to_s3
+from utils.s3_util import upload_folder_to_s3
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -51,7 +51,7 @@ def deploy_release(application: str, version: str, bucket_name: str, prefix: str
 
     # Remove current objects and upload new ones
     remove_objects(bucket_name, prefix, target_server)
-    upload_to_s3(build_dir, bucket_name, prefix, target_server)
+    upload_folder_to_s3(build_dir, bucket_name, prefix, target_server)
 
     # Clean up temporary files
     _cleanup(tgz_file, extract_dir)

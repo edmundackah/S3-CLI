@@ -34,7 +34,7 @@ def select_s3_server(target_server: TargetServer):
         sys.exit(1)
 
 
-def upload_to_s3(folder_path: str, bucket_name: str, prefix: str, target_server: TargetServer):
+def upload_folder_to_s3(folder_path: str, bucket_name: str, prefix: str, target_server: TargetServer):
     """Upload the contents of a local folder to an S3 bucket."""
     try:
         # Initialise S3 client

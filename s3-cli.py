@@ -11,6 +11,7 @@ from commands.maintenance import verify_maintenance, deploy_maintenance
 from commands.manifest_schema import validate_manifest, validate_maintenance_yaml
 from commands.pipeline_checks import check_team_folder
 from commands.remove_objects import remove_objects
+from commands.upload_file import upload_file_to_s3
 from commands.version_management import get_app_version, VersionIncrement, bump_app_version
 from utils.config_manager import ConfigManager
 from utils.helpers import validate_prefix, validate_bucket_name, validate_change_record, TargetServer, validate_boolean
@@ -60,6 +61,19 @@ def remove_objects_command(
 ):
     """Remove objects from a bucket with the given object key prefix."""
     remove_objects(bucket_name, prefix, target_server)
+
+
+@app.command("upload-file")
+def upload_file_command(
+    file_path: str = typer.Option(..., "--file-path", help="Path to the file to upload"),
+    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for the upload"),
+    change_record: Optional[str] = typer.Option(None, "--change-record",
+                                                help="Change record required to authorise prod change",
+                                                callback=validate_change_record),
+):
+    """Upload a file to an S3 bucket. The object key will be the file name."""
+    upload_file_to_s3(file_path, bucket_name, target_server)
 
 
 @app.command("verify-maintenance")

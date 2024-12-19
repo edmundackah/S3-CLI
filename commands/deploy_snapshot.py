@@ -4,7 +4,7 @@ import sys
 
 from commands.remove_objects import remove_objects
 from utils.helpers import TargetServer
-from utils.s3_util import upload_to_s3
+from utils.s3_util import upload_folder_to_s3
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -17,4 +17,4 @@ def deploy_snapshot(folder_path: str, bucket_name: str, prefix: str, target_serv
 
     # Remove current objects and upload new ones
     remove_objects(bucket_name, prefix, target_server)
-    upload_to_s3(folder_path, bucket_name, prefix, target_server)
+    upload_folder_to_s3(folder_path, bucket_name, prefix, target_server)
