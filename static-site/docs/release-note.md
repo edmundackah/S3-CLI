@@ -2,6 +2,17 @@
 
 ---
 
+## V2.3.0
+
+### 🚀 New features (1 change)
+- Introduced the `deploy-maintenance-flags` command,
+this command takes the maintenance manifest yaml file as input and deploys only the changes.
+
+### 📄 Documentation updates (1 new page)
+- **Deploy Maintenance Manifest**: Created a page to document the command
+
+---
+
 ## V2.2.0
 
 ### 🚀 New features (1 change)
