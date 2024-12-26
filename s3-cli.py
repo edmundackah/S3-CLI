@@ -7,7 +7,7 @@ from commands.change_record_overview import find_change_record
 from commands.deploy_release import deploy_release
 from commands.deploy_snapshot import deploy_snapshot
 from commands.list_objects import list_objects
-from commands.maintenance import verify_maintenance, deploy_maintenance
+from commands.maintenance import verify_maintenance, deploy_maintenance, update_maintenance_flags
 from commands.manifest_schema import validate_manifest, validate_maintenance_yaml
 from commands.pipeline_checks import check_team_folder
 from commands.remove_objects import remove_objects
@@ -100,6 +100,19 @@ def deploy_maintenance_command(
 ):
     """Deploy or update maintenance flags in the specified bucket."""
     deploy_maintenance(bucket_name, flags, state, target_server)
+
+
+@app.command("deploy-maintenance-flags")
+def deploy_maintenance_flags_command(
+    yaml_file: str = typer.Option(..., "--file", help="Path to the maintenance yaml file"),
+    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
+    change_record: Optional[str] = typer.Option(None,"--change-record",
+                                                help="Change record required to authorise prod change",
+                                                callback=validate_change_record)
+):
+    """Update the maintenance flags using the YAML manifest."""
+    update_maintenance_flags(yaml_file, bucket_name, target_server)
 
 
 @app.command("list-objects")

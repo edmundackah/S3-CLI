@@ -1,12 +1,17 @@
 changeRecord: INC000000
 flags:
-  - flag: ctl
+  - flag: ps
     state: false
     description: Flag to trigger CTL maintenance page
     dependencies:
       - ui-spa-consent-to-let
       - ui-spa-servicing-auth
   - flag: xo
+    state: true
+    description: Flag to trigger XO maintenance page
+    dependencies:
+      - ui-spa-xo
+  - flag: devops
     state: true
     description: Flag to trigger XO maintenance page
     dependencies:
