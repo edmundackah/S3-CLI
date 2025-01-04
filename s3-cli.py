@@ -8,8 +8,6 @@ from commands.deploy_release import deploy_release
 from commands.deploy_snapshot import deploy_snapshot
 from commands.list_objects import list_objects
 from commands.maintenance import verify_maintenance, deploy_maintenance, update_maintenance_flags
-from commands.manifest_schema import validate_manifest, validate_maintenance_yaml
-from commands.pipeline_checks import check_team_folder
 from commands.remove_objects import remove_objects
 from commands.upload_file import upload_file_to_s3
 from commands.version_management import get_app_version, VersionIncrement, bump_app_version
@@ -132,38 +130,6 @@ def list_objects_command(
 def view_change_record(mcr_number: str = typer.Option(..., "--number", help="e.g. MCR00000 / INC00000")):
     """Pulls change record or incident details from ServieNow"""
     find_change_record(mcr_number)
-
-
-@app.command("validate-manifest")
-def validate_release_manifest(file_path: str = typer.Option(..., "--file", help="Path to the release manifest"),
-        subgroup_id: int = typer.Option(..., "--subgroup-id", help="GitLab subgroup ID to validate against."),
-        gitlab_url: str = typer.Option(..., "--gitlab-url", help="URL of the GitLab server."),
-        gitlab_token: str = typer.Option(..., "--gitlab-token", help="Private access token for GitLab API.")
-):
-    """Validates a release manifest using the JSON Schema"""
-    validate_manifest(file_path, subgroup_id, gitlab_url, gitlab_token)
-
-
-@app.command("validate-maintenance-file")
-def validate_maintenance_file(
-        file_path: str = typer.Option(..., "--file", help="Path to the maintenance flags file"),
-        subgroup_id: int = typer.Option(..., "--subgroup-id", help="GitLab subgroup ID to validate against."),
-        gitlab_url: str = typer.Option(..., "--gitlab-url", help="URL of the GitLab server."),
-        gitlab_token: str = typer.Option(..., "--gitlab-token", help="Private access token for GitLab API.")
-):
-    """Validates the maintenance flags yaml using the JSON Schema"""
-    validate_maintenance_yaml(file_path, subgroup_id, gitlab_url, gitlab_token)
-
-
-@app.command("validate-folder-names")
-def validate_path(
-        file_path: str = typer.Option(..., "--file-path", help="Path to validate folder names."),
-        subgroup_id: int = typer.Option(..., "--subgroup-id", help="Top level GitLab subgroup ID to validate against."),
-        gitlab_url: str = typer.Option(..., "--gitlab-url", help="URL of the GitLab server."),
-        gitlab_token: str = typer.Option(..., "--gitlab-token", help="Private access token for GitLab API.")
-):
-    """Validates folder names in the given path against GitLab subgroups and nested subgroups."""
-    check_team_folder(file_path, gitlab_url, gitlab_token, subgroup_id)
 
 
 @app.command("version")
