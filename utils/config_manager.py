@@ -77,7 +77,7 @@ class ConfigManager:
     @classmethod
     def get_config(cls):
         if cls._config is None:
-            config_path = os.getenv("CONFIG_PATH", get_resource_path("resources/config.yaml"))
+            config_path = get_resource_path("resources/config.yaml")
             active_profile = os.getenv("ACTIVE_PROFILE", "default")
             logging.info(f"CLI running with profile: {active_profile}")
 
