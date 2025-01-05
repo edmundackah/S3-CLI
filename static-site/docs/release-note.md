@@ -2,6 +2,44 @@
 
 ---
 
+## V3.0.0
+
+!!! danger "💥 Breaking changes"
+    - **Removed `validate-deployment-manifest` Command**: The `validate-deployment-manifest` command has been removed. Users relying on this command should migrate to alternative validation methods.
+    
+    - **Removed `validate-maintenance-flags` Command**: The `validate-maintenance-flags` command has been removed. Ensure to adapt workflows to the updated CLI.
+    
+    - **Renamed CLI Argument**: The `bucket-name` argument in the CLI has been renamed to `bucket`. Update scripts and workflows to use the new argument name.
+
+
+### 🚀 New features (2)
+
+- **Configuration Overrides**: Added the ability to override CLI configuration using environment variables. This feature allows dynamic customization of configuration values without modifying the YAML file.
+
+- **Python 3.13 Compatibility**: Updated dependencies and ensured full compatibility with Python 3.13.
+
+---
+
+### 🔬 Improvements (1)
+- **Argument Naming Update**: Renamed the `bucket-name` argument in the CLI to `bucket` for consistency and clarity.
+
+---
+
+### 📄 Documentation updates (2)
+- **Removed Deployment Manifest Page**: The deployment manifest page has been removed from the documentation to align with the removal of the `validate-deployment-manifest` command.
+
+- **Added Configuration Overrides Documentation**: Added a new page explaining the ability to override configuration using environment variables, including examples and best practices.
+
+---
+
+### 🧰 Maintenance (1)
+- **Dependency Updates**: Updated CLI dependencies to ensure compatibility with the latest Python version (3.13) and maintain ecosystem stability.
+
+---
+
+### Additional Notes
+- This release introduces breaking changes. Users are advised to review the release notes carefully and test their workflows before upgrading to ensure compatibility.
+
 ## V2.3.0
 
 ### 🚀 New features (1 change)
