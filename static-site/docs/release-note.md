@@ -5,9 +5,7 @@
 ## V3.0.0
 
 !!! danger "💥 Breaking changes"
-    - **Removed `validate-deployment-manifest` Command**: The `validate-deployment-manifest` command has been removed. Users relying on this command should migrate to alternative validation methods.
-    
-    - **Removed `validate-maintenance-flags` Command**: The `validate-maintenance-flags` command has been removed. Ensure to adapt workflows to the updated CLI.
+    - **Removed `validate-folder-names` Command**: The `validate-folder-names` command has been removed. Ensure to adapt workflows to the updated CLI.
     
     - **Renamed CLI Argument**: The `bucket-name` argument in the CLI has been renamed to `bucket`. Update scripts and workflows to use the new argument name.
 
@@ -25,9 +23,7 @@
 
 ---
 
-### 📄 Documentation updates (2)
-- **Removed Deployment Manifest Page**: The deployment manifest page has been removed from the documentation to align with the removal of the `validate-deployment-manifest` command.
-
+### 📄 Documentation updates (1)
 - **Added Configuration Overrides Documentation**: Added a new page explaining the ability to override configuration using environment variables, including examples and best practices.
 
 ---
