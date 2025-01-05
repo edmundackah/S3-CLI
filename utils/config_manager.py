@@ -49,20 +49,16 @@ def apply_env_overrides(config: dict, env_prefix: str) -> dict:
             d = d.setdefault(key, {})
         d[keys[-1]] = value
 
-    # Check the logging level from the environment variable
     detailed_logging = os.getenv("S3_CLI_LOGGING", "").upper() == "DEBUG"
 
     for key, value in os.environ.items():
         if key.startswith(env_prefix):
-            # Remove the prefix and convert to lowercase keys
             config_path = key[len(env_prefix):].lower().split("__")
             try:
-                # Attempt to convert the value to its appropriate type
                 typed_value = yaml.safe_load(value)
             except Exception:
                 typed_value = value
 
-            # Log only the variable name, optionally log its value if detailed logging is enabled
             if detailed_logging:
                 logging.info(
                     f"Detected override: {key} -> {'.'.join(config_path)} = {typed_value}"
@@ -81,10 +77,8 @@ class ConfigManager:
     @classmethod
     def get_config(cls):
         if cls._config is None:
-            # Determine the configuration file path
             config_path = os.getenv("CONFIG_PATH", get_resource_path("resources/config.yaml"))
-            # Determine the active profile (default to 'dev' if not set)
-            active_profile = os.getenv("ACTIVE_PROFILE", "dev")
+            active_profile = os.getenv("ACTIVE_PROFILE", "default")
             logging.info(f"CLI running with profile: {active_profile}")
 
             # Load the configuration
