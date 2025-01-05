@@ -14,7 +14,7 @@ The `upload-file` command will upload a specified file to an S3 bucket
     A valid change record is required when uploading files to a production S3 bucket.
 
 ```sh
-s3-cli upload-file --bucket-name <BucketName> --file-path <FilePath> --change-record <ChangeRecord> --target-server <TargetServer>
+s3-cli upload-file --bucket <BucketName> --file-path <FilePath> --change-record <ChangeRecord> --target-server <TargetServer>
 ```
 
 ## Arguments
@@ -22,7 +22,7 @@ s3-cli upload-file --bucket-name <BucketName> --file-path <FilePath> --change-re
 !!! info
     This command will connect to ECS S3 if a target server is not provided.
 
-- `--bucket-name`: The name of the S3 bucket.
+- `--bucket`: The name of the S3 bucket.
 
 - `--file-path`:  Path to the file to upload.
 
@@ -35,7 +35,7 @@ s3-cli upload-file --bucket-name <BucketName> --file-path <FilePath> --change-re
 <div class="termy">
 
 ```console
-$ s3-cli upload-file --file-path "/Users/demo/test-file.txt" --bucket-name prod --change-record INC000000
+$ s3-cli upload-file --file-path "/Users/demo/test-file.txt" --bucket prod --change-record INC000000
 
 2024-12-19 10:49:44,047 [INFO] CLI running with profile: default
 Validating change record: INC000000

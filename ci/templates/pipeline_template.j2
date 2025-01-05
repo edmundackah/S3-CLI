@@ -32,15 +32,15 @@ deploy-flags-{{ maintenance_job.env }}{{ maintenance_job.target }}:
 
   script:
     - echo "current state of maintenance flags"
-    - s3-cli verify-maintenance --bucket-name "{{ maintenance_job.bucket_name }}" --change-record "{{ maintenance_job.change_record }}" --target-server "$TARGET_SERVER"
+    - s3-cli verify-maintenance --bucket "{{ maintenance_job.bucket_name }}" --change-record "{{ maintenance_job.change_record }}" --target-server "$TARGET_SERVER"
 {% if maintenance_job.off_flags != "N/A" %}
-    - s3-cli deploy-maintenance --bucket-name "{{ maintenance_job.bucket_name }}" --flags "{{ maintenance_job.off_flags }}" --state false --change-record "{{ maintenance_job.change_record }}" --target-server "$TARGET_SERVER"
+    - s3-cli deploy-maintenance --bucket "{{ maintenance_job.bucket_name }}" --flags "{{ maintenance_job.off_flags }}" --state false --change-record "{{ maintenance_job.change_record }}" --target-server "$TARGET_SERVER"
 {% endif %}
 {% if maintenance_job.on_flags != "N/A" %}
-    - s3-cli deploy-maintenance --bucket-name "{{ maintenance_job.bucket_name }}" --flags "{{ maintenance_job.on_flags }}" --state true --change-record "{{ maintenance_job.change_record }}" --target-server "$TARGET_SERVER"
+    - s3-cli deploy-maintenance --bucket "{{ maintenance_job.bucket_name }}" --flags "{{ maintenance_job.on_flags }}" --state true --change-record "{{ maintenance_job.change_record }}" --target-server "$TARGET_SERVER"
 {% endif %}
     - echo "maintenance flags post deployment"
-    - s3-cli verify-maintenance --bucket-name "{{ maintenance_job.bucket_name }}" --change-record "{{ maintenance_job.change_record }}" --target-server "$TARGET_SERVER"
+    - s3-cli verify-maintenance --bucket "{{ maintenance_job.bucket_name }}" --change-record "{{ maintenance_job.change_record }}" --target-server "$TARGET_SERVER"
 
   artifacts:
     when: always
@@ -62,9 +62,9 @@ deploy-{{ spa_job.application }}-{{ spa_job.version }}{{ spa_job.target }}:
     ACTIVE_PROFILE: "{{ spa_job.active_profile }}"
 
   script:
-    - s3-cli deploy-release --application "{{ spa_job.application }}" --version "{{ spa_job.version }}" --bucket-name "{{ spa_job.bucket_name }}" --prefix "{{ spa_job.prefix }}" --change-record "{{ spa_job.change_record }}" --target-server "$TARGET_SERVER"
+    - s3-cli deploy-release --application "{{ spa_job.application }}" --version "{{ spa_job.version }}" --bucket "{{ spa_job.bucket_name }}" --prefix "{{ spa_job.prefix }}" --change-record "{{ spa_job.change_record }}" --target-server "$TARGET_SERVER"
     - echo "Post deployment verification"
-    - s3-cli list-objects --bucket-name "{{ spa_job.bucket_name }}" --prefix "{{ spa_job.prefix }}" --change-record "{{ spa_job.change_record }}" --target-server "$TARGET_SERVER"
+    - s3-cli list-objects --bucket "{{ spa_job.bucket_name }}" --prefix "{{ spa_job.prefix }}" --change-record "{{ spa_job.change_record }}" --target-server "$TARGET_SERVER"
 {% endfor %}
 
 # SPA removal jobs
@@ -80,7 +80,7 @@ remove-{{ removal_job.application }}-{{ removal_job.version }}{{ removal_job.tar
     ACTIVE_PROFILE: "{{ removal_job.active_profile }}"
 
   script:
-    - s3-cli remove-objects --bucket-name "{{ removal_job.bucket_name }}" --prefix "{{ removal_job.prefix }}" --change-record "{{ removal_job.change_record }}" --target-server "$TARGET_SERVER"
+    - s3-cli remove-objects --bucket "{{ removal_job.bucket_name }}" --prefix "{{ removal_job.prefix }}" --change-record "{{ removal_job.change_record }}" --target-server "$TARGET_SERVER"
     - echo "Post removal verification"
-    - s3-cli list-objects --bucket-name "{{ removal_job.bucket_name }}" --prefix "{{ removal_job.prefix }}" --change-record "{{ removal_job.change_record }}" --target-server "$TARGET_SERVER"
+    - s3-cli list-objects --bucket "{{ removal_job.bucket_name }}" --prefix "{{ removal_job.prefix }}" --change-record "{{ removal_job.change_record }}" --target-server "$TARGET_SERVER"
 {% endfor %}

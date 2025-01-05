@@ -13,7 +13,7 @@ This command takes the maintenance manifest yaml file as input and deploys only 
     A valid change record is required when interacting with a production S3 bucket.
 
 ```sh
-s3-cli deploy-maintenance-flags --bucket-name <BucketName> --file <FilePath> --change-record <ChangeRecord> --target-server <TargetServer>
+s3-cli deploy-maintenance-flags --bucket <BucketName> --file <FilePath> --change-record <ChangeRecord> --target-server <TargetServer>
 ```
 
 ## Arguments
@@ -23,7 +23,7 @@ s3-cli deploy-maintenance-flags --bucket-name <BucketName> --file <FilePath> --c
 
 - `--change-record`: The change record to validate with ServiceNow.
 
-- `--bucket-name`: The name of the S3 bucket.
+- `--bucket`: The name of the S3 bucket.
 
 - `--file`: Desired state of the maintenance flags (e.g. true or false)
 
@@ -34,7 +34,7 @@ s3-cli deploy-maintenance-flags --bucket-name <BucketName> --file <FilePath> --c
 <div class="termy">
 
 ```console
-$ s3-cli deploy-maintenance-flags --bucket-name dev --file maintenance-flags.yml
+$ s3-cli deploy-maintenance-flags --bucket dev --file maintenance-flags.yml
 
 2024-12-26 15:31:47,067 [INFO] CLI running with profile: default
 Starting maintenance flags update in bucket 'dev'...

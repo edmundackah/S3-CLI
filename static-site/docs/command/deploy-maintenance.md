@@ -13,7 +13,7 @@ The `deploy-maintenance` command is used to update the `maintenance.json` file s
     A valid change record is required when interacting with a production S3 bucket.
 
 ```sh
-s3-cli deploy-maintenance --bucket-name <BucketName> --flags <Flags> --state <State> --change-record <ChangeRecord> --target-server <TargetServer>
+s3-cli deploy-maintenance --bucket <BucketName> --flags <Flags> --state <State> --change-record <ChangeRecord> --target-server <TargetServer>
 ```
 
 ## Arguments
@@ -23,7 +23,7 @@ s3-cli deploy-maintenance --bucket-name <BucketName> --flags <Flags> --state <St
 
 - `--change-record`: The change record to validate with ServiceNow.
 
-- `--bucket-name`: The name of the S3 bucket.
+- `--bucket`: The name of the S3 bucket.
 
 - `--state`: Desired state of the maintenance flags (e.g. true or false)
 
@@ -36,7 +36,7 @@ s3-cli deploy-maintenance --bucket-name <BucketName> --flags <Flags> --state <St
 <div class="termy">
 
 ```console
-$ s3-cli deploy-maintenance --bucket-name dev --flags devops:test,xo,test2 --state true
+$ s3-cli deploy-maintenance --bucket dev --flags devops:test,xo,test2 --state true
 
 2024-12-03 14:11:22,127 [INFO] Connecting to S3 Server: ECS_S3
 2024-12-03 14:11:22,175 [INFO] Fetching maintenance.json from bucket dev...

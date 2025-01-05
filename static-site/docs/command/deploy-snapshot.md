@@ -10,7 +10,7 @@ The `deploy-snapshot` command validates a local folder and uploads its contents 
 ## Usage
 
 ```sh
-s3-cli deploy-snapshot --folder-path <FolderPath> --bucket-name <BucketName> --prefix <Prefix> --target-server <TargetServer>
+s3-cli deploy-snapshot --folder-path <FolderPath> --bucket <BucketName> --prefix <Prefix> --target-server <TargetServer>
 ```
 
 ## Arguments
@@ -20,7 +20,7 @@ s3-cli deploy-snapshot --folder-path <FolderPath> --bucket-name <BucketName> --p
 
 - `--folder-path`: The path to the local folder to be uploaded.
 
-- `--bucket-name`: The name of the S3 bucket.
+- `--bucket`: The name of the S3 bucket.
 
 - `--prefix`: The prefix to use for the S3 object keys (homepage path).
 
@@ -31,7 +31,7 @@ s3-cli deploy-snapshot --folder-path <FolderPath> --bucket-name <BucketName> --p
 <div class="termy">
 
 ```console
-$ s3-cli deploy-snapshot --bucket-name cli-demo --folder-path /snapshot-test --prefix /doc-test
+$ s3-cli deploy-snapshot --bucket cli-demo --folder-path /snapshot-test --prefix /doc-test
 
 2024-12-03 08:35:50,160 [INFO] Connecting to S3 Server: ECS_S3
 2024-12-03 08:35:50,208 [INFO] Listing objects with prefix 'doc-test' in bucket 'cli-demo'...

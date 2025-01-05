@@ -25,7 +25,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 @app.command("deploy-snapshot")
 def deploy_snapshot_command(
     folder_path: str = typer.Option(..., "--folder-path", help="Path to the folder containing the snapshot"),
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket", callback=validate_bucket_name),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket", callback=validate_bucket_name),
     prefix: str = typer.Option(..., "--prefix", help="Object key prefix", callback=validate_prefix),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment")
 ):
@@ -37,7 +37,7 @@ def deploy_snapshot_command(
 def deploy_release_command(
     application: str = typer.Option(..., "--application", help="Name of the application"),
     app_version: str = typer.Option(..., "--version", help="Application version number"),
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     prefix: str = typer.Option(..., "--prefix", help="Object key prefix", callback=validate_prefix),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
     change_record: Optional[str] = typer.Option(None,"--change-record",
@@ -50,7 +50,7 @@ def deploy_release_command(
 
 @app.command("remove-objects")
 def remove_objects_command(
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     prefix: str = typer.Option(..., "--prefix", help="Object key prefix", callback=validate_prefix),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for object removal"),
     change_record: Optional[str] = typer.Option(None,"--change-record",
@@ -64,7 +64,7 @@ def remove_objects_command(
 @app.command("upload-file")
 def upload_file_command(
     file_path: str = typer.Option(..., "--file-path", help="Path to the file to upload"),
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for the upload"),
     change_record: Optional[str] = typer.Option(None, "--change-record",
                                                 help="Change record required to authorise prod change",
@@ -76,7 +76,7 @@ def upload_file_command(
 
 @app.command("verify-maintenance")
 def verify_maintenance_command(
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server"),
     change_record: Optional[str] = typer.Option(None,"--change-record",
                                                 help="Change record required to authorise prod change",
@@ -88,7 +88,7 @@ def verify_maintenance_command(
 
 @app.command("deploy-maintenance")
 def deploy_maintenance_command(
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     flags: str = typer.Option(..., "--flags", help="Comma-separated list of flags to deploy"),
     state: str = typer.Option(..., "--state", help="State to set for the flags (e.g. true or false)", callback=validate_boolean),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
@@ -103,7 +103,7 @@ def deploy_maintenance_command(
 @app.command("deploy-maintenance-flags")
 def deploy_maintenance_flags_command(
     yaml_file: str = typer.Option(..., "--file", help="Path to the maintenance yaml file"),
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
     change_record: Optional[str] = typer.Option(None,"--change-record",
                                                 help="Change record required to authorise prod change",
@@ -115,7 +115,7 @@ def deploy_maintenance_flags_command(
 
 @app.command("list-objects")
 def list_objects_command(
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     prefix: str = typer.Option("", "--prefix", help="Prefix to filter objects in the bucket", callback=validate_prefix),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
     change_record: Optional[str] = typer.Option(None,"--change-record",
