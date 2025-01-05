@@ -58,7 +58,7 @@ By default, only the names of detected environment variables are logged.
 
 When `S3_CLI_LOGGING=DEBUG` is set, both the names and values of the environment variables are logged.
 
-!!! danger "Avoid Logging Sensitive Data"""
+!!! danger "Avoid Logging Sensitive Data"
     Be cautious about enabling `DEBUG` logging in production environments, as it may log sensitive configuration values.
 
 ```plaintext
