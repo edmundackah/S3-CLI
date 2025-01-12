@@ -3,9 +3,8 @@ import mimetypes
 import os
 import sys
 
-import typer
-
 from utils.helpers import TargetServer
+from utils.log_util import log, AnsiColor
 from utils.s3_util import select_s3_server
 
 # Configure logging
@@ -28,10 +27,8 @@ def upload_file_to_s3(file_path: str, bucket_name: str, target_server: TargetSer
     file_name = os.path.basename(file_path)
     
     try:
-        # Initialise S3 client
         s3_client = select_s3_server(target_server)
 
-        # Determine Content-Type
         content_type, _ = mimetypes.guess_type(file_path)
         content_type = content_type or "text/plain"
 
@@ -54,11 +51,6 @@ def upload_file_to_s3(file_path: str, bucket_name: str, target_server: TargetSer
             extra_args['ACL'] = 'public-read'
 
         s3_client.upload_file(Filename=file_path, Bucket=bucket_name, Key=file_name, ExtraArgs=extra_args)
-        typer.secho(
-            f"File successfully uploaded to s3://{bucket_name}/{file_name}.",
-            fg=typer.colors.GREEN,
-            bold=True
-        )
+        log(f"File successfully uploaded to s3://{bucket_name}/{file_name}.", AnsiColor.GREEN)
     except Exception as e:
-        typer.secho(f"Failed to upload the file: {e}", fg=typer.colors.RED, bold=True)
-        sys.exit(1)
+        log(f"Failed to upload the file: {e}", AnsiColor.RED, 1)

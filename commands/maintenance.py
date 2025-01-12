@@ -3,11 +3,11 @@ import logging
 import os
 import sys
 
-import typer
 import yaml
 from tabulate import tabulate
 
 from utils.helpers import TargetServer
+from utils.log_util import log, AnsiColor
 from utils.s3_util import select_s3_server
 
 MAINTENANCE_FILE = "maintenance.json"
@@ -38,14 +38,11 @@ def verify_maintenance(bucket_name: str, target_server: TargetServer):
     except s3_client.exceptions.NoSuchKey:
         logging.info(f"{MAINTENANCE_FILE} does not exist in bucket {bucket_name}.")
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
-        sys.exit(1)
+        log(f"An error occurred: {e}", AnsiColor.RED, 1)
 
 
 def deploy_maintenance(bucket_name: str, flags: str, state: bool, target_server: TargetServer):
-    """
-    Deploy or update maintenance flags in an S3 bucket.
-    """
+    """Deploy or update maintenance flags in an S3 bucket."""
     s3_client = select_s3_server(target_server)
 
     try:
@@ -58,7 +55,7 @@ def deploy_maintenance(bucket_name: str, flags: str, state: bool, target_server:
         logging.info(f"Existing {MAINTENANCE_FILE} file retrieved.")
     except s3_client.exceptions.NoSuchKey:
         # File doesn't exist; start with an empty object
-        logging.warning(f"{MAINTENANCE_FILE} does not exist. Creating a new file.")
+        log(f"{MAINTENANCE_FILE} does not exist. Creating a new file.", AnsiColor.BRIGHT_YELLOW)
         data = {}
 
     # Update or create flags
@@ -73,7 +70,6 @@ def deploy_maintenance(bucket_name: str, flags: str, state: bool, target_server:
         logging.info(f"Uploading updated {MAINTENANCE_FILE} to bucket {bucket_name}...")
         extra_args = {'ContentType': "application/json"}
 
-        # Add server-specific parameters
         if target_server == TargetServer.AWS_S3:
             extra_args['ServerSideEncryption'] = 'AES256'
         else:
@@ -82,45 +78,36 @@ def deploy_maintenance(bucket_name: str, flags: str, state: bool, target_server:
         # Upload the object
         logging.info(f"Uploading maintenance file to S3 bucket {bucket_name}...")
         s3_client.put_object(Body=updated_contents, Bucket=bucket_name, Key=MAINTENANCE_FILE, **extra_args)
-        logging.info("Maintenance flags deployed successfully.")
-        sys.exit(1)
+        log("Maintenance flags deployed successfully.", AnsiColor.RED, 1)
     except Exception as e:
-        logging.error(f"Failed to upload {MAINTENANCE_FILE}: {e}")
-        sys.exit(1)
+        log(f"Failed to upload {MAINTENANCE_FILE}: {e}", AnsiColor.RED, 1)
 
 
 def update_maintenance_flags(yaml_file: str, bucket_name: str, target_server: TargetServer):
-    """
-    Update the maintenance flags using the YAML manifest.
-    """
-    typer.secho(f"Starting maintenance flags update in bucket '{bucket_name}'...\nUsing maintenance file: {yaml_file}",
-                fg=typer.colors.YELLOW, bold=True)
+    """Update the maintenance flags using the YAML manifest."""
 
-    # Validate YAML file exist
+    log(f"Starting maintenance flags update in bucket '{bucket_name}'... Using maintenance file: {yaml_file}",
+                AnsiColor.BRIGHT_YELLOW)
+
     if not os.path.exists(yaml_file):
-        typer.secho(f"The file '{yaml_file}' does not exist.", fg=typer.colors.RED, bold=True)
-        raise typer.Exit(code=1)
+        log(f"The file '{yaml_file}' does not exist.", AnsiColor.BRIGHT_RED, 1)
 
-    # Read the YAML file
     try:
         with open(yaml_file, "r") as file:
             yaml_data = yaml.safe_load(file)
             new_flags = {item["flag"]: str(item["state"]).lower() for item in yaml_data["flags"]}
     except yaml.YAMLError as e:
-        typer.secho(f"Failed to parse YAML file: {e}", fg=typer.colors.RED, bold=True)
-        raise typer.Exit(code=1)
+        log(f"Failed to parse YAML file: {e}", AnsiColor.BRIGHT_RED, 1)
 
-    # Connect to S3
     s3_client = select_s3_server(target_server)
 
-    # Fetch existing maintenance.json or create a new one
     try:
-        typer.secho(f"Fetching existing '{MAINTENANCE_FILE}' from bucket...", fg=typer.colors.CYAN)
+        log(f"Fetching existing '{MAINTENANCE_FILE}' from bucket...", AnsiColor.CYAN)
         response = s3_client.get_object(Bucket=bucket_name, Key=MAINTENANCE_FILE)
         existing_flags = json.loads(response["Body"].read().decode("utf-8"))
     except s3_client.exceptions.NoSuchKey:
-        typer.secho(f"{MAINTENANCE_FILE} does not exist in bucket '{bucket_name}'. Creating a new one...",
-                    fg=typer.colors.YELLOW, bold=True)
+        log(f"{MAINTENANCE_FILE} does not exist in bucket '{bucket_name}'. Creating a new one...",
+            AnsiColor.BRIGHT_YELLOW)
         existing_flags = {}
 
     # Compare and update flags
@@ -133,13 +120,11 @@ def update_maintenance_flags(yaml_file: str, bucket_name: str, target_server: Ta
             updated_flags[flag] = state
 
     if not changes:
-        typer.secho("No changes detected. Maintenance flags are up-to-date.", fg=typer.colors.GREEN, bold=True)
-        raise typer.Exit(code=0)
+        log("No changes detected. Maintenance flags are up-to-date.", AnsiColor.BRIGHT_GREEN)
 
-    # Log changes
-    typer.secho("Applying the following changes:", fg=typer.colors.YELLOW, bold=True)
+    log("Applying the following changes:", AnsiColor.BRIGHT_YELLOW)
     for flag, old_state, new_state in changes:
-        typer.secho(f" - {flag}: {old_state} -> {new_state}", fg=typer.colors.BLUE)
+        log(f" - {flag}: {old_state} -> {new_state}", AnsiColor.BLUE)
 
     # Upload updated maintenance.json
     try:
@@ -151,9 +136,8 @@ def update_maintenance_flags(yaml_file: str, bucket_name: str, target_server: Ta
         else:
             extra_args['ACL'] = 'public-read'
 
-        typer.secho(f"Uploading updated '{MAINTENANCE_FILE}' to bucket...", fg=typer.colors.CYAN, bold=True)
+        log(f"Uploading updated '{MAINTENANCE_FILE}' to bucket...", AnsiColor.CYAN)
         s3_client.put_object(Bucket=bucket_name, Key=MAINTENANCE_FILE, Body=json.dumps(updated_flags, indent=4), **extra_args)
-        typer.secho("Maintenance flags updated successfully.", fg=typer.colors.GREEN, bold=True)
+        log("Maintenance flags updated successfully.", AnsiColor.GREEN)
     except Exception as e:
-        typer.secho(f"Failed to upload updated {MAINTENANCE_FILE}: {e}", fg=typer.colors.RED, bold=True)
-        raise typer.Exit(code=1)
+        log(f"Failed to upload updated {MAINTENANCE_FILE}: {e}", AnsiColor.RED, 1)

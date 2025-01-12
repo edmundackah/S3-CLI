@@ -1,12 +1,12 @@
 import logging
 import mimetypes
 import os
-import sys
 
 import boto3
 
 from utils.config_manager import ConfigManager
 from utils.helpers import TargetServer
+from utils.log_util import AnsiColor, log
 
 config = ConfigManager.get_config()
 
@@ -14,7 +14,6 @@ config = ConfigManager.get_config()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 def select_s3_server(target_server: TargetServer):
-    # Initialise S3 client
     logging.info(f"Connecting to S3 Server: {target_server}")
 
     if target_server == TargetServer.AWS_S3:
@@ -30,14 +29,12 @@ def select_s3_server(target_server: TargetServer):
             verify=False
         )
     else:
-        logging.error(f"{target_server} support is not implemented yet.")
-        sys.exit(1)
+        log(f"{target_server} support is not implemented yet.", AnsiColor.RED, 1)
 
 
 def upload_folder_to_s3(folder_path: str, bucket_name: str, prefix: str, target_server: TargetServer):
     """Upload the contents of a local folder to an S3 bucket."""
     try:
-        # Initialise S3 client
         s3_client = select_s3_server(target_server)
 
         for root, _, files in os.walk(folder_path):
@@ -61,10 +58,8 @@ def upload_folder_to_s3(folder_path: str, bucket_name: str, prefix: str, target_
                     s3_client.upload_file(Filename=local_file_path, Bucket=bucket_name, Key=s3_key, ExtraArgs=extra_args)
                     logging.info(f"Uploaded {local_file_path} successfully.")
                 except Exception as e:
-                    logging.error(f"Failed to upload {local_file_path}: {e}")
-                    sys.exit(1)
+                    log(f"Failed to upload {local_file_path}: {e}", AnsiColor.RED, 1)
 
-        logging.info("All files uploaded successfully.")
+        log("All files uploaded successfully.", AnsiColor.GREEN)
     except Exception as e:
-        logging.error(f"Failed to upload files to S3: {e}")
-        sys.exit(1)
+        log(f"Failed to upload files to S3: {e}", AnsiColor.RED, 1)

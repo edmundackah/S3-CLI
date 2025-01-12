@@ -18,8 +18,10 @@
 
 ---
 
-### 🔬 Improvements (1)
+### 🔬 Improvements (2)
 - **Argument Naming Update**: Renamed the `bucket-name` argument in the CLI to `bucket` for consistency and clarity.
+
+- **ANSI Colours**: Created a new logging util to address ANSI colours not appearing in GitLab CI Terminal.
 
 ---
 

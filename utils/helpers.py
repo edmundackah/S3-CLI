@@ -1,5 +1,4 @@
 import re
-import sys
 from enum import Enum
 from typing import Optional
 
@@ -31,13 +30,10 @@ def validate_boolean(value: str):
 
 
 def validate_prefix(value: str) -> str:
-    # regex pattern for valid homepage paths
     homepage_pattern = re.compile(r"^/[a-zA-Z0-9-/]+$")
 
-    # Strip leading and trailing slashes
     stripped_value = value.strip("/")
 
-    # Validate the homepage format
     if not value or value == "/":
         raise typer.BadParameter(
             "The homepage must not be empty or just '/'. It should look like '/path/to/resource' or '/path'.")

@@ -1,9 +1,9 @@
 import logging
-import sys
 
 from tabulate import tabulate
 
 from utils.helpers import TargetServer
+from utils.log_util import log, AnsiColor
 from utils.s3_util import select_s3_server
 
 # Configure logging
@@ -42,5 +42,4 @@ def list_objects(bucket_name: str, prefix: str, target_server: TargetServer):
         print(table)
 
     except Exception as e:
-        logging.error(f"Failed to list objects: {e}")
-        sys.exit(1)
+        log(f"Failed to list objects: {e}", AnsiColor.RED, 1)
