@@ -8,8 +8,7 @@ from commands.deploy_release import deploy_release
 from commands.deploy_snapshot import deploy_snapshot
 from commands.list_objects import list_objects
 from commands.maintenance import verify_maintenance, deploy_maintenance, update_maintenance_flags
-from commands.manifest_schema import validate_manifest, validate_maintenance_yaml
-from commands.pipeline_checks import check_team_folder
+from commands.manifest_schema import validate_maintenance_yaml, validate_manifest
 from commands.remove_objects import remove_objects
 from commands.upload_file import upload_file_to_s3
 from commands.version_management import get_app_version, VersionIncrement, bump_app_version
@@ -27,7 +26,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 @app.command("deploy-snapshot")
 def deploy_snapshot_command(
     folder_path: str = typer.Option(..., "--folder-path", help="Path to the folder containing the snapshot"),
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket", callback=validate_bucket_name),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket", callback=validate_bucket_name),
     prefix: str = typer.Option(..., "--prefix", help="Object key prefix", callback=validate_prefix),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment")
 ):
@@ -39,7 +38,7 @@ def deploy_snapshot_command(
 def deploy_release_command(
     application: str = typer.Option(..., "--application", help="Name of the application"),
     app_version: str = typer.Option(..., "--version", help="Application version number"),
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     prefix: str = typer.Option(..., "--prefix", help="Object key prefix", callback=validate_prefix),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
     change_record: Optional[str] = typer.Option(None,"--change-record",
@@ -52,7 +51,7 @@ def deploy_release_command(
 
 @app.command("remove-objects")
 def remove_objects_command(
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     prefix: str = typer.Option(..., "--prefix", help="Object key prefix", callback=validate_prefix),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for object removal"),
     change_record: Optional[str] = typer.Option(None,"--change-record",
@@ -66,7 +65,7 @@ def remove_objects_command(
 @app.command("upload-file")
 def upload_file_command(
     file_path: str = typer.Option(..., "--file-path", help="Path to the file to upload"),
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for the upload"),
     change_record: Optional[str] = typer.Option(None, "--change-record",
                                                 help="Change record required to authorise prod change",
@@ -78,7 +77,7 @@ def upload_file_command(
 
 @app.command("verify-maintenance")
 def verify_maintenance_command(
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server"),
     change_record: Optional[str] = typer.Option(None,"--change-record",
                                                 help="Change record required to authorise prod change",
@@ -90,7 +89,7 @@ def verify_maintenance_command(
 
 @app.command("deploy-maintenance")
 def deploy_maintenance_command(
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     flags: str = typer.Option(..., "--flags", help="Comma-separated list of flags to deploy"),
     state: str = typer.Option(..., "--state", help="State to set for the flags (e.g. true or false)", callback=validate_boolean),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
@@ -105,7 +104,7 @@ def deploy_maintenance_command(
 @app.command("deploy-maintenance-flags")
 def deploy_maintenance_flags_command(
     yaml_file: str = typer.Option(..., "--file", help="Path to the maintenance yaml file"),
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
     change_record: Optional[str] = typer.Option(None,"--change-record",
                                                 help="Change record required to authorise prod change",
@@ -117,7 +116,7 @@ def deploy_maintenance_flags_command(
 
 @app.command("list-objects")
 def list_objects_command(
-    bucket_name: str = typer.Option(..., "--bucket-name", help="Name of the S3 bucket"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
     prefix: str = typer.Option("", "--prefix", help="Prefix to filter objects in the bucket", callback=validate_prefix),
     target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
     change_record: Optional[str] = typer.Option(None,"--change-record",
@@ -153,17 +152,6 @@ def validate_maintenance_file(
 ):
     """Validates the maintenance flags yaml using the JSON Schema"""
     validate_maintenance_yaml(file_path, subgroup_id, gitlab_url, gitlab_token)
-
-
-@app.command("validate-folder-names")
-def validate_path(
-        file_path: str = typer.Option(..., "--file-path", help="Path to validate folder names."),
-        subgroup_id: int = typer.Option(..., "--subgroup-id", help="Top level GitLab subgroup ID to validate against."),
-        gitlab_url: str = typer.Option(..., "--gitlab-url", help="URL of the GitLab server."),
-        gitlab_token: str = typer.Option(..., "--gitlab-token", help="Private access token for GitLab API.")
-):
-    """Validates folder names in the given path against GitLab subgroups and nested subgroups."""
-    check_team_folder(file_path, gitlab_url, gitlab_token, subgroup_id)
 
 
 @app.command("version")

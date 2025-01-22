@@ -1,6 +1,5 @@
 import json
 import logging
-import sys
 from typing import List
 
 import requests
@@ -11,6 +10,7 @@ from jsonschema import Draft7Validator
 from utils.file_picker import get_resource_path
 from utils.gitlab_util import get_active_projects
 from utils.helpers import is_valid_change_record, TargetServer, create_artifact_url
+from utils.log_util import log, AnsiColor
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -18,8 +18,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 def validate_manifest(yaml_file: str, subgroup_id: int, gitlab_url: str, private_token: str):
     _validate_yaml(yaml_file, "resources/release-manifest-schema.json")
 
-    # Fetch valid projects
-    typer.secho("Fetching active projects from GitLab...", fg=typer.colors.BLUE)
+    log("Fetching active projects from GitLab...", AnsiColor.BLUE)
 
     valid_projects = get_active_projects(subgroup_id, gitlab_url, private_token)
 
@@ -30,10 +29,9 @@ def validate_manifest(yaml_file: str, subgroup_id: int, gitlab_url: str, private
     project_name = data.get("projectName")
 
     if project_name in valid_projects:
-        typer.secho(f"✅ '{project_name}' is a valid GitLab project ", fg=typer.colors.GREEN)
+        log(f"✅ '{project_name}' is a valid GitLab project ", AnsiColor.GREEN)
     else:
-        typer.secho(f"❌ '{project_name}' does not exist in GitLab.", fg=typer.colors.RED)
-        sys.exit(1)
+        log(f"❌ '{project_name}' does not exist in GitLab.", AnsiColor.RED, 1)
 
     artifact_exists(data.get("projectName"), data.get("version"), data.get("targetServer"))
 
@@ -45,10 +43,10 @@ def validate_maintenance_yaml(yaml_file: str, subgroup_id: int, gitlab_url: str,
     _validate_yaml(yaml_file, "resources/maintenance-flag-schema.json")
 
     # Fetch valid projects
-    typer.secho("Fetching active projects from GitLab...", fg=typer.colors.BLUE)
+    log("Fetching active projects from GitLab...", AnsiColor.BLUE)
     valid_projects = get_active_projects(subgroup_id, gitlab_url, private_token)
 
-    typer.secho("Validating Flag dependencies...", fg=typer.colors.BLUE)
+    log("Validating Flag dependencies...", AnsiColor.BLUE)
 
     # Validate Maintenance flag dependencies against active GitLab projects.
     with open(yaml_file, "r") as file:
@@ -57,10 +55,9 @@ def validate_maintenance_yaml(yaml_file: str, subgroup_id: int, gitlab_url: str,
     for flag in data.get("flags", []):
         for dependency in flag.get("dependencies", []):
             if dependency not in valid_projects:
-                typer.secho(f"❌ Flag dependency '{dependency}' does not exist in GitLab.", fg=typer.colors.RED)
-                sys.exit(1)
+                log(f"❌ Flag dependency '{dependency}' does not exist in GitLab.", AnsiColor.RED, 1)
 
-    typer.secho("✅ All Flag dependencies are valid!", fg=typer.colors.GREEN)
+    log("✅ All Flag dependencies are valid!", AnsiColor.GREEN)
 
     # Validate change record
     _validate_change_record(data.get("changeRecord"))
@@ -80,25 +77,21 @@ def artifact_exists(application: str, version: str, servers: List[TargetServer])
             response = requests.head(url)
             logging.info(f"Checking artifact: [HEAD] {url} , status code: {response.status_code}")
 
-            # Check if file exists
             if response.status_code == 200:
-                typer.secho(f"✅ '{application}'  version '{version}' found in artifactory", fg=typer.colors.GREEN)
+                log(f"✅ '{application}'  version '{version}' found in artifactory", AnsiColor.GREEN)
             else:
-                typer.secho(f"❌ '{application}'  version '{version}' not found", fg=typer.colors.RED)
-                sys.exit(1)
+                log(f"❌ '{application}'  version '{version}' not found", AnsiColor.RED, 1)
         except requests.exceptions.RequestException as e:
-            logging.error(f"Error checking artifact existence: {e}")
-            sys.exit(1)
+            log(f"Error checking artifact existence: {e}", AnsiColor.RED, 1)
 
 
 def _validate_change_record(change_record: str):
     response = is_valid_change_record(change_record)
 
     if not response["isValid"]:
-        typer.secho(f"❌ {response['message']}", fg=typer.colors.RED)
-        sys.exit(1)
+        log(f"❌ {response['message']}", AnsiColor.RED, 1)
     else:
-        typer.secho(f"✅ Change record {change_record} is valid!", fg=typer.colors.GREEN)
+        log(f"✅ Change record {change_record} is valid!", AnsiColor.GREEN)
 
 
 def _validate_yaml(yaml_file: str, schema: str):
@@ -118,18 +111,15 @@ def _validate_yaml(yaml_file: str, schema: str):
 
         # Check for validation errors
         if errors:
-            typer.echo("Validation failed! Errors found:", err=True)
+            log("Validation failed! Errors found:", AnsiColor.YELLOW)
             for error in errors:
-                typer.echo(f"    - {'.'.join(map(str, error.absolute_path))}: {error.message}", err=True)
+                log(f"    - {'.'.join(map(str, error.absolute_path))}: {error.message}", AnsiColor.BRIGHT_RED)
             raise typer.Exit(code=1)
 
         typer.echo("Validation successful! The YAML file is valid. 🥳")
     except FileNotFoundError as fnfe:
-        typer.echo(f"File not found: {fnfe.filename}", err=True)
-        raise typer.Exit(code=1)
+        log(f"File not found: {fnfe.filename}", AnsiColor.RED, 1)
     except yaml.YAMLError as ye:
-        typer.echo(f"Failed to parse YAML: {ye}", err=True)
-        raise typer.Exit(code=1)
+        log(f"Failed to parse YAML: {ye}", AnsiColor.RED, 1)
     except json.JSONDecodeError as je:
-        typer.echo(f"Failed to parse JSON schema: {je}", err=True)
-        raise typer.Exit(code=1)
+        log(f"Failed to parse JSON schema: {je}", AnsiColor.RED, 1)

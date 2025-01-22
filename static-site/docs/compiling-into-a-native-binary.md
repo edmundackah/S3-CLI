@@ -55,7 +55,7 @@ Navigate to the `dist` folder and run the binary:
 <div class="termy">
 
 ```console
-$ ./s3-cli verify-maintenance --bucket-name prod --change-record INC000000
+$ ./s3-cli verify-maintenance --bucket prod --change-record INC000000
 
 2024-12-05 12:26:22,440 [INFO] CLI running with profile: default
 Validating change record: INC000000

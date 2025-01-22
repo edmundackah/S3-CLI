@@ -21,7 +21,6 @@ def fetch_record(change_record):
     Raises:
         ChangeRecordException: If an unexpected status code is returned.
     """
-    print(f"Validating change record: {change_record}")
 
     if change_record.startswith("MCR"):
         endpoint = f"{config.snow_broker.endpoint.change_record}/{change_record}"
@@ -31,8 +30,6 @@ def fetch_record(change_record):
         raise ValueError("Invalid record number. Must start with 'MCR' or 'INC'.")
 
     url = urljoin(config.snow_broker.hostname,endpoint)
-
-    print(f"endpoint: {endpoint}  hostname: {config.snow_broker.hostname}  calling: {url}")
 
     try:
         response = requests.get(url, headers={"Accept": "application/json"})

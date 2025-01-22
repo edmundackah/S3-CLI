@@ -4,6 +4,7 @@ from pathlib import Path
 import typer
 
 from utils.file_picker import get_resource_path
+from utils.log_util import AnsiColor, log
 
 
 class VersionIncrement(str, Enum):
@@ -17,15 +18,13 @@ def get_app_version():
     version_file_path = Path(get_resource_path("resources/.version"))
 
     if not version_file_path.exists():
-        typer.secho("Warning: .version file is missing in the resources folder.", fg=typer.colors.YELLOW)
-        raise typer.Exit(code=1)
+        log(".version file is missing in the resources folder.", AnsiColor.RED, 1)
 
     with version_file_path.open("r") as file:
         version = file.read().strip()
 
     if not version:
-        typer.secho("Error: No version number set in the .version file.", fg=typer.colors.RED)
-        raise typer.Exit(code=1)
+        log("No version number set in the .version file.", AnsiColor.RED, 1)
 
     typer.secho(f"{version}")
 
@@ -40,22 +39,19 @@ def bump_app_version(part: VersionIncrement):
     version_file_path = Path(get_resource_path("resources/.version"))
 
     if not version_file_path.exists():
-        typer.secho("Error: .version file is missing in the resources folder.", fg=typer.colors.RED)
-        raise typer.Exit(code=1)
+        log(".version file is missing in the resources folder.", AnsiColor.RED, 1)
 
     with version_file_path.open("r") as file:
         version = file.read().strip()
 
     if not version:
-        typer.secho("Error: No version number set in the .version file.", fg=typer.colors.RED)
-        raise typer.Exit(code=1)
+        log("No version number set in the .version file.", AnsiColor.RED, 1)
 
     # Parse version
     try:
         major, minor, patch = map(int, version.split("."))
     except ValueError:
-        typer.secho("Error: Invalid version format. Expected MAJOR.MINOR.PATCH.", fg=typer.colors.RED)
-        raise typer.Exit(code=1)
+        log("Invalid version format. Expected MAJOR.MINOR.PATCH.", AnsiColor.RED, 1)
 
     # Bump the specified part
     if part == VersionIncrement.MAJOR:
@@ -73,4 +69,4 @@ def bump_app_version(part: VersionIncrement):
     with version_file_path.open("w") as file:
         file.write(new_version)
 
-    typer.secho(f"Version bumped to: {new_version}", fg=typer.colors.GREEN)
+    log(f"Version bumped to: {new_version}", AnsiColor.GREEN)

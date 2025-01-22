@@ -10,7 +10,7 @@ It displays the results in a table format.
     A valid change record is required when interacting with a production S3 bucket.
 
 ```sh
-s3-cli verify-maintenance --bucket-name <BucketName> --change-record <ChangeRecord> --target-server <TargetServer>
+s3-cli verify-maintenance --bucket <BucketName> --change-record <ChangeRecord> --target-server <TargetServer>
 ```
 
 ## Arguments
@@ -20,7 +20,7 @@ s3-cli verify-maintenance --bucket-name <BucketName> --change-record <ChangeReco
 
 - `--change-record`: The change record to validate with ServiceNow.
 
-- `--bucket-name`: The name of the S3 bucket.
+- `--bucket`: The name of the S3 bucket.
 
 - `--target-server`: The target server to deploy to (e.g. AWS_S3 or ECS_S3)
 
@@ -29,7 +29,7 @@ s3-cli verify-maintenance --bucket-name <BucketName> --change-record <ChangeReco
 <div class="termy">
 
 ```console
-$ s3-cli verify-maintenance --bucket-name dev
+$ s3-cli verify-maintenance --bucket dev
 
 2024-12-03 14:47:20,406 [INFO] Connecting to S3 Server: ECS_S3
 2024-12-03 14:47:20,454 [INFO] Fetching maintenance.json from bucket dev...

@@ -36,26 +36,28 @@ theme:
         icon: material/lightbulb-outline
         name: Switch to system preference
   features:
-    - navigation.footer
-    - navigation.indexes
-    - navigation.sections
-    - navigation.tracking
-    - navigation.tabs.sticky
-    - navigation.tabs
-    - navigation.instant
-    - navigation.instant.progress
-    - navigation.expand
-    - navigation.top
-    - search.suggest
-    - search.share
-    - content.code.copy
-    - toc.follow
+  - navigation.footer
+  - navigation.indexes
+  - navigation.sections
+  - navigation.tracking
+  - navigation.tabs.sticky
+  - navigation.tabs
+  - navigation.instant
+  - navigation.instant.progress
+  - navigation.expand
+  - navigation.top
+  - search.suggest
+  - search.share
+  - content.code.copy
+  - toc.follow
+
 plugins:
   - search
 
 extra_javascript:
   - js/custom.js
   - js/termynal.js
+
 extra_css:
   - css/custom.css
   - css/termynal.css
@@ -74,8 +76,6 @@ nav:
             - command/deploy-maintenance.md
             - command/deploy-maintenance-flags.md
           - command/change-record-details.md
-          - Release Pipeline Commands:
-            - command/release-pipeline/folder-name-validator.md
       - CD Components:
         - cd-components/deployment-manifest.md
         - cd-components/maintenance-flags.md
@@ -83,6 +83,7 @@ nav:
         - config-management/getting-started.md
         - config-management/switching-profiles.md
         - config-management/creating-a-profile.md
+        - config-management/overriding-config.md
         - config-management/updating-a-profile.md
       - compiling-into-a-native-binary.md
   - Release Note:

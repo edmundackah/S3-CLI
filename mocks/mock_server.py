@@ -95,6 +95,20 @@ def mcr_response(mcr_number):
 def inc_response(inc_number):
     if inc_number == "INC500000":
         return internal_server_error(f"/incident/{inc_number}")
+    elif inc_number == "INC700000":
+        response = {
+            "valid": False,
+            "number": inc_number,
+            "short_description": "Request CA00296640 out of agreed SLA",
+            "assignment_group": {
+                "link": "https://rbs.service-now.com/api/now/table/sys_user_group/4f9a5f930fa6d680dcc74ebce1050eb9",
+                "value": "4f9a5f930fa6d680dcc74ebce1050eb9"
+            },
+            "description": "Request CA00296640 out of agreed SLA. This request has been chased via Ask Archie...",
+            "state": "7",
+            "invalid_reason": "N/A"
+        }
+        return make_response(jsonify(response), 200)
     elif inc_number == "INC000000":
         response = {
             "valid": True,

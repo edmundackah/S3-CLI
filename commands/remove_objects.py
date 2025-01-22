@@ -2,18 +2,15 @@ import logging
 import sys
 
 from utils.helpers import TargetServer
+from utils.log_util import AnsiColor, log
 from utils.s3_util import select_s3_server
 
-# Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 def remove_objects(bucket_name: str, prefix: str, target_server: TargetServer):
-    """
-    Remove objects from an AWS S3 bucket with the specified prefix.
-    """
+    """Remove objects from an AWS S3 bucket with the specified prefix."""
 
     try:
-        # Initialise S3 client
         s3_client = select_s3_server(target_server)
 
         logging.info(f"Listing objects with prefix '{prefix}' in bucket '{bucket_name}'...")
@@ -35,11 +32,9 @@ def remove_objects(bucket_name: str, prefix: str, target_server: TargetServer):
         logging.info(f"Successfully deleted {deleted_count} objects.")
 
         if "Errors" in delete_response:
-            logging.warning(f"Failed to delete {len(delete_response['Errors'])} objects:")
+            log(f"Failed to delete {len(delete_response['Errors'])} objects:", AnsiColor.YELLOW)
             for error in delete_response["Errors"]:
-                logging.warning(f"- {error['Key']}: {error['Message']}")
+                log(f"- {error['Key']}: {error['Message']}", AnsiColor.RED)
             sys.exit(1)
-
     except Exception as e:
-        logging.error(f"Error during object removal: {e}")
-        sys.exit(1)
+        log(f"Error during object removal: {e}", AnsiColor.RED, 1)

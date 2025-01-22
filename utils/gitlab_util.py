@@ -1,7 +1,6 @@
-import sys
-
 import gitlab
-import typer
+
+from utils.log_util import log, AnsiColor
 
 
 def get_active_projects(subgroup_id: int, gitlab_url: str, private_token: str):
@@ -17,7 +16,6 @@ def get_active_projects(subgroup_id: int, gitlab_url: str, private_token: str):
         set: A set of active (non-archived) project names.
     """
     try:
-        # Initialise GitLab connection
         gl = gitlab.Gitlab(gitlab_url, private_token=private_token)
         subgroup = gl.groups.get(subgroup_id)
 
@@ -29,8 +27,7 @@ def get_active_projects(subgroup_id: int, gitlab_url: str, private_token: str):
 
         return active_projects
     except Exception as e:
-        typer.secho(f"An error occurred: {e}", fg=typer.colors.RED)
-        sys.exit(1)
+        log(f"An error occurred: {e}", AnsiColor.RED, 1)
 
 
 def get_gitlab_subgroups(gitlab_url: str, private_token: str, group_id: int) -> set:

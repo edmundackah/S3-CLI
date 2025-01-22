@@ -13,7 +13,7 @@ The `remove-objects` deletes all objects from the bucket with object keys that m
     A valid change record is required when removing objects in a production S3 bucket.
 
 ```sh
-s3-cli remove-objects --bucket-name <BucketName> --prefix <Prefix> --change-record <ChangeRecord> --target-server <TargetServer>
+s3-cli remove-objects --bucket <BucketName> --prefix <Prefix> --change-record <ChangeRecord> --target-server <TargetServer>
 ```
 
 ## Arguments
@@ -23,7 +23,7 @@ s3-cli remove-objects --bucket-name <BucketName> --prefix <Prefix> --change-reco
 
 - `--change-record`: The change record to validate with ServiceNow.
 
-- `--bucket-name`: The name of the S3 bucket.
+- `--bucket`: The name of the S3 bucket.
 
 - `--prefix`: The prefix to use for the S3 object keys (homepage path).
 
@@ -34,7 +34,7 @@ s3-cli remove-objects --bucket-name <BucketName> --prefix <Prefix> --change-reco
 <div class="termy">
 
 ```console
-$ s3-cli remove-objects --bucket-name dev --prefix /snapshot
+$ s3-cli remove-objects --bucket dev --prefix /snapshot
 
 2024-12-03 12:47:42,273 [INFO] Connecting to S3 Server: ECS_S3
 2024-12-03 12:47:42,325 [INFO] Listing objects with prefix 'snapshot' in bucket 'dev'...

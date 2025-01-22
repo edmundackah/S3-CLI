@@ -11,7 +11,7 @@ starts with the given prefix.
     A valid change record is required when listing objects in a production S3 bucket.
 
 ```sh
-s3-cli list-objects --bucket-name <BucketName> --prefix <Prefix> --change-record <ChangeRecord> --target-server <TargetServer>
+s3-cli list-objects --bucket <BucketName> --prefix <Prefix> --change-record <ChangeRecord> --target-server <TargetServer>
 ```
 
 ## Arguments
@@ -21,7 +21,7 @@ s3-cli list-objects --bucket-name <BucketName> --prefix <Prefix> --change-record
 
 - `--change-record`: The change record to validate with ServiceNow.
 
-- `--bucket-name`: The name of the S3 bucket.
+- `--bucket`: The name of the S3 bucket.
 
 - `--prefix`: The prefix to use for the S3 object keys (homepage path).
 
@@ -32,7 +32,7 @@ s3-cli list-objects --bucket-name <BucketName> --prefix <Prefix> --change-record
 <div class="termy">
 
 ```console
-$ s3-cli list-objects --bucket-name cli-demo --prefix /doc-test
+$ s3-cli list-objects --bucket cli-demo --prefix /doc-test
 
 2024-12-05 20:33:47,636 [INFO] CLI running with profile: default
 2024-12-05 20:33:47,663 [INFO] Connecting to S3 Server: ECS_S3
