@@ -6,6 +6,7 @@ import urllib3
 from commands.change_record_overview import find_change_record
 from commands.deploy_release import deploy_release
 from commands.deploy_snapshot import deploy_snapshot
+from commands.generate_metadata import generate_metadata_file
 from commands.list_objects import list_objects
 from commands.maintenance import verify_maintenance, deploy_maintenance, update_maintenance_flags
 from commands.manifest_schema import validate_maintenance_yaml, validate_manifest
@@ -167,6 +168,16 @@ def bump_version(
 ):
     """Bumps the version number in the .version file."""
     bump_app_version(increment)
+
+
+@app.command("generate-metadata")
+def generate_metadata(
+    folder_path: str = typer.Option(..., "--folder-path", help="Path to the folder where the file will be created"),
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
+    version: str = typer.Option(..., "--version", help="The application version number"),
+):
+    """Generates metadata files (BUILDINFO, VERSION) based on bucket type"""
+    generate_metadata_file(folder_path, bucket_name, version)
 
 
 if __name__ == "__main__":

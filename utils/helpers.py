@@ -49,9 +49,13 @@ def validate_prefix(value: str) -> str:
     return stripped_value
 
 
+def get_prod_buckets():
+    return list_to_array(config.prod_buckets)
+
+
 def validate_bucket_name(bucket_name: str):
     """Validate bucket name is non-prod."""
-    if bucket_name in list_to_array(config.prod_buckets):
+    if bucket_name in get_prod_buckets():
         raise typer.BadParameter("Production buckets are not supported by this command")
     return bucket_name
 
@@ -61,7 +65,7 @@ def validate_change_record(change_record: Optional[str], ctx: typer.Context):
     try:
         bucket_name = ctx.params.get("bucket_name", "").lower()
 
-        if bucket_name in list_to_array(config.prod_buckets):
+        if bucket_name in get_prod_buckets():
             if change_record is None:
                 raise typer.BadParameter("No change record provided.")
             response = is_valid_change_record(change_record)
