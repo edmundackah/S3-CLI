@@ -75,6 +75,7 @@ nav:
             - command/verify-maintenance.md
             - command/deploy-maintenance.md
             - command/deploy-maintenance-flags.md
+          - command/object-metadata.md
           - command/change-record-details.md
           - command/generate-buildinfo.md
       - CD Components:
