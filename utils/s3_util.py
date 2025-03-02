@@ -33,12 +33,12 @@ def select_s3_server(target_server: TargetServer):
         log(f"{target_server} support is not implemented yet.", AnsiColor.RED, 1)
 
 
-def sanitize_metadata(metadata: dict) -> dict:
+def map_metadata(metadata: dict) -> dict:
     """Ensure metadata keys start with x-amz-meta- per the Amazon S3 spec."""
-    sanitized_metadata = {}
+    sanitised_metadata = {}
     for key, value in metadata.items():
-        sanitized_metadata[key.lower()] = str(value)
-    return sanitized_metadata
+        sanitised_metadata[key.lower()] = str(value)
+    return sanitised_metadata
 
 def upload_folder_to_s3(folder_path: str, bucket_name: str, prefix: str, target_server: TargetServer):
     """Upload the contents of a local folder to an S3 bucket, handling metadata JSON files properly."""
@@ -67,7 +67,7 @@ def upload_folder_to_s3(folder_path: str, bucket_name: str, prefix: str, target_
                     try:
                         with open(metadata_file, "r") as f:
                             metadata = json.load(f)
-                        metadata = sanitize_metadata(metadata)
+                        metadata = map_metadata(metadata)
                         logging.info(f"Using metadata from {metadata_file}: {metadata}")
                     except Exception as e:
                         logging.warning(f"Failed to read metadata from {metadata_file}: {e}")
