@@ -7,7 +7,7 @@ import tarfile
 import requests
 
 from commands.remove_objects import remove_objects
-from utils.helpers import TargetServer, create_artifact_url
+from utils.helpers import TargetServer, build_artifact_url
 from utils.log_util import AnsiColor, log
 from utils.s3_util import upload_folder_to_s3
 
@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 def deploy_release(application: str, version: str, bucket_name: str, prefix: str, target_server: TargetServer):
     """Deploy the release package to an S3 bucket."""
 
-    artifactory_url = create_artifact_url(application, version)
+    artifactory_url = build_artifact_url(bucket_name, application, version)
     tgz_file = artifactory_url.split("/")[-1]
     try:
         log(f"Downloading release package from {artifactory_url}...", AnsiColor.BRIGHT_GREEN)

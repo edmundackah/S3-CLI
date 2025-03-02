@@ -9,7 +9,7 @@ from jsonschema import Draft7Validator
 
 from utils.file_picker import get_resource_path
 from utils.gitlab_util import get_active_projects
-from utils.helpers import is_valid_change_record, TargetServer, create_artifact_url
+from utils.helpers import is_valid_change_record, TargetServer, build_artifact_url
 from utils.log_util import log, AnsiColor
 
 # Configure logging
@@ -72,7 +72,7 @@ def artifact_exists(application: str, version: str, servers: List[TargetServer])
             if server == TargetServer.AWS_S3:
                 version = f"{version}-aws"
 
-            url: str = create_artifact_url(application, version)
+            url: str = build_artifact_url(application, version)
 
             response = requests.head(url)
             logging.info(f"Checking artifact: [HEAD] {url} , status code: {response.status_code}")

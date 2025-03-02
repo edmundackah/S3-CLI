@@ -18,7 +18,8 @@ class ECSS3Config(BaseModel):
     secret_key_var: str
 
 class ArtifactoryConfig(BaseModel):
-    spa_pattern: str
+    snapshot_server: str
+    release_server: str
 
 class ProfileConfig(BaseModel):
     prod_buckets: str

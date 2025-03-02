@@ -119,6 +119,10 @@ def render_table(data: dict, table_title: str):
         log(f"Error rendering table: {e}", AnsiColor.RED, 1)
 
 
-def create_artifact_url(application: str, version: str):
-    return (config.artifactory.spa_pattern.replace("{{application}}", application)
+def build_artifact_url(bucket_name: str, application: str, version: str):
+    if bucket_name in get_prod_buckets():
+        return (config.artifactory.release_server.replace("{{application}}", application)
                 .replace("{{version}}", version))
+    else:
+        return (config.artifactory.snapshot_server.replace("{{application}}", application)
+                    .replace("{{version}}", version))
