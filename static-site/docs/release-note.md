@@ -11,7 +11,7 @@
 - **Generate Metadata Command**: Added a new command for generating **BUILDINFO** and **VERSION** files.
 
 - **Metadata Support for Upload Command**: The `deploy-snapshot` and `deploy-release` command now supports metadata JSON files.  
-  If a file has an associated `<filename>-metadata.json`, its contents are applied as **object metadata** during upload.  
+  If a file has an associated `<filename>.meta.json`, its contents are applied as **object metadata** during upload.  
 
 !!! note "Automatic Metadata Key Formatting"
     If the keys in the metadata JSON **do not start with** `"x-amz-meta-"`,  
@@ -21,10 +21,10 @@
     ```
     my-folder/
     ├── index.html
-    ├── index.html-metadata.json
+    ├── index.html.meta.json
     ├── script.js
     ├── styles.css
-    ├── styles.css-metadata.json
+    ├── styles.css.meta.json
     ```
   
 !!! success "Improved Upload Handling"

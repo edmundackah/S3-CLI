@@ -48,7 +48,7 @@ def upload_folder_to_s3(folder_path: str, bucket_name: str, prefix: str, target_
         for root, _, files in os.walk(folder_path):
             for file in files:
                 # Skip metadata JSON files
-                if file.endswith("-metadata.json"):
+                if file.endswith(".meta.json"):
                     continue
 
                 local_file_path = os.path.join(root, file)
@@ -60,7 +60,7 @@ def upload_folder_to_s3(folder_path: str, bucket_name: str, prefix: str, target_
                 content_type = content_type or "text/plain"
 
                 # Check for associated metadata JSON file
-                metadata_file = os.path.join(root, f"{file}-metadata.json")
+                metadata_file = os.path.join(root, f"{file}.meta.json")
                 metadata = {}
 
                 if os.path.exists(metadata_file):
