@@ -1,3 +1,5 @@
+import base64
+import hashlib
 import logging
 import mimetypes
 import os
@@ -24,6 +26,7 @@ def select_s3_server(target_server: TargetServer):
         return boto3.client(
             's3',
             endpoint_url=config.ecs_s3.endpoint_url,
+            config=boto3.session.Config(signature_version="s3v4"),
             aws_access_key_id=os.getenv(config.ecs_s3.access_key_var),
             aws_secret_access_key=os.getenv(config.ecs_s3.secret_key_var),
             region_name=config.ecs_s3.region,
@@ -40,8 +43,16 @@ def map_metadata(metadata: dict) -> dict:
         sanitised_metadata[key.lower()] = str(value)
     return sanitised_metadata
 
+def calculate_md5(file_path):
+    """Calculate the Base64-encoded MD5 checksum of a file."""
+    md5_hash = hashlib.md5()
+    with open(file_path, "rb") as f:
+        for byte_block in iter(lambda: f.read(4096), b""):
+            md5_hash.update(byte_block)
+    return base64.b64encode(md5_hash.digest()).decode("utf-8")
+
 def upload_folder_to_s3(folder_path: str, bucket_name: str, prefix: str, target_server: TargetServer):
-    """Upload the contents of a local folder to an S3 bucket, handling metadata JSON files properly."""
+    """Upload files to S3 with correct metadata and checksums for AWS & ECS S3."""
     try:
         s3_client = select_s3_server(target_server)
 
@@ -67,18 +78,26 @@ def upload_folder_to_s3(folder_path: str, bucket_name: str, prefix: str, target_
                     try:
                         with open(metadata_file, "r") as f:
                             metadata = json.load(f)
-                        metadata = map_metadata(metadata)
                         logging.info(f"Using metadata from {metadata_file}: {metadata}")
                     except Exception as e:
                         logging.warning(f"Failed to read metadata from {metadata_file}: {e}")
 
                 # Apply encryption settings for AWS S3, public-read for ECS S3
-                extra_args = {'ContentType': content_type, 'Metadata': metadata}
+                extra_args = {
+                    'ContentType': content_type,
+                    'Metadata': metadata
+                }
 
                 if target_server == TargetServer.AWS_S3:
                     extra_args['ServerSideEncryption'] = 'AES256'
                 else:
                     extra_args['ACL'] = 'public-read'
+
+                # Calculate MD5 checksum for ECS S3 (AWS does not require this)
+                if target_server == TargetServer.ECS_S3:
+                    content_md5 = calculate_md5(local_file_path)
+                    extra_args['ContentMD5'] = content_md5
+                    logging.info(f"Calculated ContentMD5: {content_md5} for {local_file_path}")
 
                 try:
                     with open(local_file_path, 'rb') as file_data:
