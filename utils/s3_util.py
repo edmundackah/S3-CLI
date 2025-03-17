@@ -40,7 +40,7 @@ def map_metadata(metadata: dict) -> dict:
     """Ensure metadata keys start with x-amz-meta- per the Amazon S3 spec."""
     sanitised_metadata = {}
     for key, value in metadata.items():
-        sanitised_metadata[key.lower()] = str(value)
+        sanitised_metadata[str(key.lower())] = str(value)
     return sanitised_metadata
 
 def calculate_md5(file_path):
@@ -49,7 +49,7 @@ def calculate_md5(file_path):
     with open(file_path, "rb") as f:
         for byte_block in iter(lambda: f.read(4096), b""):
             md5_hash.update(byte_block)
-    return base64.b64encode(md5_hash.digest()).decode("utf-8")
+    return str(base64.b64encode(md5_hash.digest()).decode("utf-8"))
 
 def upload_folder_to_s3(folder_path: str, bucket_name: str, prefix: str, target_server: TargetServer):
     """Upload files to S3 with correct metadata and checksums for AWS & ECS S3."""
