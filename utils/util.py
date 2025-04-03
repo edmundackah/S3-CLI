@@ -13,3 +13,10 @@ def write_json_file(file_path: str, data: dict):
         log(f"Overwritten: {file_path}", AnsiColor.GREEN)
     except Exception as e:
         log(f"Error writing file: {e}", AnsiColor.RED, 1)
+
+def str_to_bool(value):
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in ("true", "1", "yes")
+    return bool(value)

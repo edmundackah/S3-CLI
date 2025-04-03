@@ -9,6 +9,7 @@ from tabulate import tabulate
 from utils.helpers import TargetServer
 from utils.log_util import log, AnsiColor
 from utils.s3_util import select_s3_server
+from utils.util import str_to_bool
 
 MAINTENANCE_FILE = "maintenance.json"
 
@@ -61,7 +62,7 @@ def deploy_maintenance(bucket_name: str, flags: str, state: bool, target_server:
     # Update or create flags
     for flag in flags.split(","):
         logging.info(f"Setting flag '{flag}' to state '{state}'.")
-        data[flag] = state
+        data[flag] = str_to_bool(state)
 
     # Save the updated file back to S3
     updated_contents = json.dumps(data, indent=4)
@@ -78,7 +79,7 @@ def deploy_maintenance(bucket_name: str, flags: str, state: bool, target_server:
         # Upload the object
         logging.info(f"Uploading maintenance file to S3 bucket {bucket_name}...")
         s3_client.put_object(Body=updated_contents, Bucket=bucket_name, Key=MAINTENANCE_FILE, **extra_args)
-        log("Maintenance flags deployed successfully.", AnsiColor.RED, 1)
+        log("Maintenance flags deployed successfully.", AnsiColor.BRIGHT_GREEN)
     except Exception as e:
         log(f"Failed to upload {MAINTENANCE_FILE}: {e}", AnsiColor.RED, 1)
 
@@ -95,7 +96,7 @@ def update_maintenance_flags(yaml_file: str, bucket_name: str, target_server: Ta
     try:
         with open(yaml_file, "r") as file:
             yaml_data = yaml.safe_load(file)
-            new_flags = {item["flag"]: str(item["state"]).lower() for item in yaml_data["flags"]}
+            new_flags = {item["flag"]: str_to_bool(item["state"]) for item in yaml_data["flags"]}
     except yaml.YAMLError as e:
         log(f"Failed to parse YAML file: {e}", AnsiColor.BRIGHT_RED, 1)
 
