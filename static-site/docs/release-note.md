@@ -2,13 +2,27 @@
 
 ---
 
+## V3.2.0
+
+### 🧰 Maintenance (1)
+- **Dependency Updates**: Updated CLI dependencies to address vulnerabilities.
+
+### 🚀 New features (1)
+- **Generate Metadata Command**: Added a new command for generating BUILDINFO and VERSION files.
+
+---
+
+## V3.1.0
+
+### 🧰 Maintenance (1)
+- **Updated application profiles**: Updated CLI profiles to remove mockdata in dev and prod profiles.
+
 ## V3.0.0
 
 !!! danger "💥 Breaking changes"
     - **Removed `validate-folder-names` Command**: The `validate-folder-names` command has been removed. Ensure to adapt workflows to the updated CLI.
     
     - **Renamed CLI Argument**: The `bucket-name` argument in the CLI has been renamed to `bucket`. Update scripts and workflows to use the new argument name.
-
 
 ### 🚀 New features (2)
 

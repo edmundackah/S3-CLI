@@ -76,6 +76,7 @@ nav:
             - command/deploy-maintenance.md
             - command/deploy-maintenance-flags.md
           - command/change-record-details.md
+          - command/generate-buildinfo.md
       - CD Components:
         - cd-components/deployment-manifest.md
         - cd-components/maintenance-flags.md

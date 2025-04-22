@@ -6,6 +6,7 @@ import tarfile
 
 import requests
 
+from commands.generate_metadata import generate_metadata_file
 from commands.remove_objects import remove_objects
 from utils.helpers import TargetServer, create_artifact_url
 from utils.log_util import AnsiColor, log
@@ -51,6 +52,7 @@ def deploy_release(application: str, version: str, bucket_name: str, prefix: str
 
     # Remove current objects and upload new ones
     remove_objects(bucket_name, prefix, target_server)
+    generate_metadata_file(extract_dir, bucket_name, version)
     upload_folder_to_s3(build_dir, bucket_name, prefix, target_server)
 
     # Clean up temporary files
