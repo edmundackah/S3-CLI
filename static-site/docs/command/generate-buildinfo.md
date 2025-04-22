@@ -9,9 +9,6 @@ The `generate-metadata` command is used create the metadata json files containin
 
 ## Usage
 
-!!! note
-    This command is triggered automatically when using the `deploy-release` command.
-
 ```sh
 s3-cli generate-metadata --bucket <BucketName> --folder-path <FolderPath> --version <Version>
 ```

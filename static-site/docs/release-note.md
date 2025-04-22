@@ -7,8 +7,34 @@
 ### 🧰 Maintenance (1)
 - **Dependency Updates**: Updated CLI dependencies to address vulnerabilities.
 
-### 🚀 New features (1)
-- **Generate Metadata Command**: Added a new command for generating BUILDINFO and VERSION files.
+### 🚀 New features (2)
+- **Generate Metadata Command**: Added a new command for generating **BUILDINFO** and **VERSION** files.
+
+- **Metadata Support for Upload Command**: The `deploy-snapshot` and `deploy-release` command now supports metadata JSON files.  
+  If a file has an associated `<filename>.meta.json`, its contents are applied as **object metadata** during upload.  
+
+!!! note "Automatic Metadata Key Formatting"
+    If the keys in the metadata JSON **do not start with** `"x-amz-meta-"`,  
+    the CLI **automatically adds the prefix** to comply with Amazon S3 specifications.
+
+!!! example "Example Folder Structure"
+    ```
+    my-folder/
+    ├── index.html
+    ├── index.html.meta.json
+    ├── script.js
+    ├── styles.css
+    ├── styles.css.meta.json
+    ```
+  
+!!! success "Improved Upload Handling"
+    - Metadata JSON files **are not uploaded** to S3.  
+    - Objects are now uploaded **with correct metadata** based on their JSON metadata file.  
+    - Logging improvements ensure **clear visibility** of applied metadata.
+
+### 📄 Documentation updates (1)
+- **New Page: Upload Command Metadata**  
+  A new documentation page has been added under the **Commands** section to explain how metadata JSON files work with the `upload-folder` command.
 
 ---
 

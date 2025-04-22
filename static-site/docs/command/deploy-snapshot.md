@@ -7,6 +7,12 @@ The `deploy-snapshot` command validates a local folder and uploads its contents 
 !!! warning
     The deploy snapshot command cannot deploy to production S3 buckets.
 
+!!! info "Metadata Support in Uploads"
+    This command supports **S3 object metadata** using `.meta.json` files.  
+    If a file has a matching **`<filename>.meta.json`**, its contents are used as metadata  
+    and automatically prefixed with `x-amz-meta-`. The metadata JSON itself **is not uploaded**.  
+    [Learn more →](./object-metadata.md)
+
 ## Usage
 
 ```sh

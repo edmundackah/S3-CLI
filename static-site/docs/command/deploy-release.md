@@ -8,6 +8,12 @@ validates a change record with ServiceNow and uploads the contents of the `packa
 !!! warning "Mandatory Change Record"
     A valid change record is required to run this command against a production bucket.
 
+!!! info "Metadata Support in Uploads"
+    This command supports **S3 object metadata** using `.meta.json` files.  
+    If a file has a matching **`<filename>.meta.json`**, its contents are used as metadata  
+    and automatically prefixed with `x-amz-meta-`. The metadata JSON itself **is not uploaded**.  
+    [Learn more →](./object-metadata.md)
+
 ## Usage
 
 ```sh
