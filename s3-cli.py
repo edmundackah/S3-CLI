@@ -6,6 +6,7 @@ import urllib3
 from commands.change_record_overview import find_change_record
 from commands.deploy_release import deploy_release
 from commands.deploy_snapshot import deploy_snapshot
+from commands.download_objects import download_objects
 from commands.generate_metadata import generate_metadata_file
 from commands.list_objects import list_objects
 from commands.maintenance import verify_maintenance, deploy_maintenance, update_maintenance_flags
@@ -126,6 +127,18 @@ def list_objects_command(
 ):
     """List and display objects in an S3 bucket as a table."""
     list_objects(bucket_name, prefix, target_server)
+
+@app.command("download-objects")
+def download_objects_command(
+    bucket_name: str = typer.Option(..., "--bucket", help="Name of the S3 bucket"),
+    prefix: str = typer.Option(None, "--prefix", help="Optional prefix to filter objects"),
+    target_server: TargetServer = typer.Option(TargetServer.ECS_S3, "--target-server", help="Target server for deployment"),
+    change_record: Optional[str] = typer.Option(None,"--change-record",
+                                                help="Change record required to authorise prod change",
+                                                callback=validate_change_record)
+):
+    """Downloads all S3 objects (or only those matching a prefix) and zips them."""
+    download_objects(bucket_name, target_server, prefix)
 
 
 @app.command("view-change-record")

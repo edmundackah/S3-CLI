@@ -2,6 +2,20 @@
 
 ---
 
+## V3.4.0
+
+### 🚀 New features (1)
+
+- **Download and Zip S3 Objects**:  
+  Added a new `download-objects` command to download all files (or files matching a prefix) from an S3 bucket and package them into a ZIP file.  
+  The ZIP file is named using the format `[bucket-name]-[target-server]-[timestamp].zip` and retains the original S3 object hierarchy.
+
+### 📄 Documentation updates (1)
+
+- **New Page: Download Objects**  
+  A new documentation page has been added under the **Commands** section to explain  the `download-objects` command.
+
+
 ## V3.2.0
 
 ### 🧰 Maintenance (1)
