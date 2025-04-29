@@ -5,6 +5,10 @@
 The `deploy-release` command downloads a `.tgz` file from a specified URL (Artifactory), 
 validates a change record with ServiceNow and uploads the contents of the `package/build` directory to an S3 bucket.
 
+!!! note
+    When deploying to a non-prod bucket, the deploying release command will check the configured snapshot Artifactory server 
+    for the application and version specified.
+
 !!! warning "Mandatory Change Record"
     A valid change record is required to run this command against a production bucket.
 
